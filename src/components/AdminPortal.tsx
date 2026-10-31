@@ -136,6 +136,13 @@ export function AdminPortal({
   const [newRegionName, setNewRegionName] = useState('')
   const [newRegionCode, setNewRegionCode] = useState('')
   const [newTeamName, setNewTeamName] = useState('')
+
+  // Edit Access modal state
+  const [showEditAccessModal, setShowEditAccessModal] = useState(false)
+  const [editAccessUser, setEditAccessUser] = useState<any>(null)
+  const [editAccessRole, setEditAccessRole] = useState('')
+  const [editAccessDept, setEditAccessDept] = useState('')
+  const [editAccessStatus, setEditAccessStatus] = useState('Active')
   const [newTeamRegion, setNewTeamRegion] = useState('')
 
   // Assign Work Order form state
@@ -1833,7 +1840,7 @@ export function AdminPortal({
                       <div className="flex items-center gap-2">
                         <span className="badge">{staff.role}</span>
                         <span className={`badge ${staff.status === 'Active' ? 'badge-green' : 'badge-red'}`}>{staff.status}</span>
-                        <button onClick={() => showToast(`Access updated for ${staff.name}`, 'success')} className="button button-secondary text-xs">Edit Access</button>
+                        <button onClick={() => { setEditAccessUser(staff); setEditAccessRole(staff.role); setEditAccessDept(staff.department); setEditAccessStatus(staff.status); setShowEditAccessModal(true) }} className="button button-secondary text-xs">Edit Access</button>
                       </div>
                     </div>
                   ))}
@@ -1846,11 +1853,21 @@ export function AdminPortal({
                 <div className="space-y-3">
                   <div className="flex items-center justify-between py-2 border-b border-line">
                     <span className="text-xs text-muted">Most reported issue</span>
-                    <span className="text-xs font-bold text-ink">Power outage (Area blackout)</span>
+                    <span className="text-xs font-bold text-ink">{(() => {
+                      if (publicReports.length === 0) return 'N/A'
+                      const counts: Record<string, number> = {}
+                      publicReports.forEach(r => { counts[r.issueType] = (counts[r.issueType] || 0) + 1 })
+                      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A'
+                    })()}</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-line">
                     <span className="text-xs text-muted">Highest incident province</span>
-                    <span className="text-xs font-bold text-ink">NCD</span>
+                    <span className="text-xs font-bold text-ink">{(() => {
+                      if (publicReports.length === 0) return 'N/A'
+                      const counts: Record<string, number> = {}
+                      publicReports.forEach(r => { counts[r.province] = (counts[r.province] || 0) + 1 })
+                      return Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'N/A'
+                    })()}</span>
                   </div>
                   <div className="flex items-center justify-between py-2 border-b border-line">
                     <span className="text-xs text-muted">Average resolution time</span>
@@ -2236,6 +2253,71 @@ export function AdminPortal({
             </div>
             <div className="pt-4">
               <button onClick={() => setShowTeamModal(false)} className="button button-secondary w-full">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Access Modal */}
+      {showEditAccessModal && editAccessUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold text-gray-900">Edit Access - {editAccessUser.name}</h3>
+              <button onClick={() => setShowEditAccessModal(false)} className="text-gray-500 hover:text-gray-900">
+                <Icon name="close" className="size-4" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Role</label>
+                <select
+                  value={editAccessRole}
+                  onChange={(e) => setEditAccessRole(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
+                >
+                  <option value="staff">Staff (Call Centre)</option>
+                  <option value="field">Field Crew</option>
+                  <option value="operations">Operations</option>
+                  <option value="admin">Admin HQ</option>
+                  <option value="regional_coordinator">Regional Coordinator</option>
+                  <option value="regional_manager">Regional Manager</option>
+                  <option value="hq_admin">HQ Admin</option>
+                  <option value="system_admin">System Admin</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Department</label>
+                <input
+                  value={editAccessDept}
+                  onChange={(e) => setEditAccessDept(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Status</label>
+                <select
+                  value={editAccessStatus}
+                  onChange={(e) => setEditAccessStatus(e.target.value)}
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-2 pt-4">
+              <button
+                onClick={() => {
+                  setStaffUsers(staffUsers.map(u => u.id === editAccessUser.id ? { ...u, role: editAccessRole as any, department: editAccessDept, status: editAccessStatus as any } : u))
+                  showToast(`Access updated for ${editAccessUser.name}`, 'success')
+                  setShowEditAccessModal(false)
+                }}
+                className="button button-primary flex-1"
+              >
+                Save Changes
+              </button>
+              <button onClick={() => setShowEditAccessModal(false)} className="button button-secondary flex-1">Cancel</button>
             </div>
           </div>
         </div>
