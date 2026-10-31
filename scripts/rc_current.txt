@@ -1,0 +1,60 @@
+role === 'regional_coordinator' && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-extrabold tracking-tight">Regional Triage</h1>
+                <p className="text-xs text-muted mt-1">Review incoming work, confirm incident links, assign work orders</p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="card p-5">
+                  <span className="icon-tile metric-blue"><Icon name="document" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">{publicReports.length}</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Pending Triage</p>
+                </div>
+                <div className="card p-5">
+                  <span className="icon-tile metric-amber"><Icon name="alert" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Suggested Links</p>
+                </div>
+                <div className="card p-5">
+                  <span className="icon-tile metric-green"><Icon name="team" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Work Orders Assigned</p>
+                </div>
+                <div className="card p-5">
+                  <span className="icon-tile metric-red"><Icon name="clock" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Overdue Reviews</p>
+                </div>
+              </div>
+              <div className="card overflow-hidden">
+                <div className="flex items-center justify-between border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Triage Queue</h3>
+                  <span className="badge badge-blue">{publicReports.filter(r => r.status === 'Under review').length} pending</span>
+                </div>
+                <div className="divide-y divide-line">
+                  {publicReports.filter(r => r.status === 'Under review').map((report) => (
+                    <div key={report.caseNumber} className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
+                          <span className="badge badge-amber">{report.issueType}</span>
+                        </div>
+                        <p className="text-xs text-muted mt-1">{report.location} ({report.province})</p>
+                        <p className="text-xs text-muted mt-0.5">{report.description}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => showToast(`Report ${report.caseNumber} assigned to incident`, 'success')} className="button button-primary text-xs">Link to Incident</button>
+                        <button onClick={() => showToast(`Work order created for ${report.caseNumber}`, 'success')} className="button button-secondary text-xs">Create Work Order</button>
+                      </div>
+                    </div>
+                  ))}
+                  {publicReports.filter(r => r.status === 'Under review').length === 0 && (
+                    <div className="p-8 text-center text-sm text-muted">No reports pending triage.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Regional Manager View */}
+          {

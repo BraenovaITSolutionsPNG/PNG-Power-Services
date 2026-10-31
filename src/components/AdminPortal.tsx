@@ -1469,6 +1469,102 @@ export function AdminPortal({
                   <p className="mt-1 text-xs font-medium text-muted">High Priority Incidents</p>
                 </div>
               </div>
+
+              {/* Reports by Province */}
+              <div className="card overflow-hidden">
+                <div className="border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Reports by Province</h3>
+                </div>
+                <div className="divide-y divide-line">
+                  {Array.from(new Set(publicReports.map(r => r.province))).map((prov) => {
+                    const count = publicReports.filter(r => r.province === prov).length
+                    const resolved = publicReports.filter(r => r.province === prov && r.status === 'Resolved').length
+                    return (
+                      <div key={prov} className="p-4 flex items-center justify-between">
+                        <div>
+                          <p className="font-bold text-sm text-ink">{prov}</p>
+                          <p className="text-xs text-muted">{count} total · {resolved} resolved</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-24 h-2 rounded-full bg-surface-raised overflow-hidden">
+                            <div className="h-full bg-success rounded-full" style={{ width: `${count > 0 ? (resolved / count) * 100 : 0}%` }} />
+                          </div>
+                          <span className="text-xs font-bold text-muted">{count > 0 ? Math.round((resolved / count) * 100) : 0}%</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                  {publicReports.length === 0 && (
+                    <div className="p-8 text-center text-sm text-muted">No reports to display.</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Open Reports Requiring Attention */}
+              <div className="card overflow-hidden">
+                <div className="border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Open Reports Requiring Attention</h3>
+                </div>
+                <div className="divide-y divide-line">
+                  {publicReports.filter(r => r.status !== 'Resolved').map((report) => (
+                    <div key={report.caseNumber} className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
+                          <span className="badge badge-amber">{report.status}</span>
+                        </div>
+                        <p className="text-xs text-muted mt-1">{report.issueType} · {report.location} ({report.province})</p>
+                      </div>
+                      <div className="flex gap-2 shrink-0">
+                        <button onClick={() => showToast(`Escalated ${report.caseNumber} to regional coordinator`, 'success')} className="button button-primary text-xs">Escalate</button>
+                        <button onClick={() => showToast(`Reassigned ${report.caseNumber}`, 'info')} className="button button-secondary text-xs">Reassign</button>
+                        <button onClick={() => showToast(`Resource request sent for ${report.caseNumber}`, 'info')} className="button button-secondary text-xs">Request Resources</button>
+                      </div>
+                    </div>
+                  ))}
+                  {publicReports.filter(r => r.status !== 'Resolved').length === 0 && (
+                    <div className="p-8 text-center text-sm text-muted">All reports resolved.</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Recurring Issues & Resource Blockers */}
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="card p-5">
+                  <h3 className="font-extrabold text-base mb-3">Recurring Issues</h3>
+                  <div className="space-y-2">
+                    {incidentsList.filter(i => i.priority === 'High' || i.priority === 'Critical').map((inc) => (
+                      <div key={inc.id} className="flex items-center justify-between py-2 border-b border-line last:border-0">
+                        <div>
+                          <p className="text-xs font-bold text-ink">{inc.title}</p>
+                          <p className="text-[0.7rem] text-muted">{inc.meta}</p>
+                        </div>
+                        <span className={`badge ${inc.priority === 'Critical' ? 'badge-red' : 'badge-amber'}`}>{inc.priority}</span>
+                      </div>
+                    ))}
+                    {incidentsList.filter(i => i.priority === 'High' || i.priority === 'Critical').length === 0 && (
+                      <p className="text-xs text-muted">No recurring issues.</p>
+                    )}
+                  </div>
+                </div>
+                <div className="card p-5">
+                  <h3 className="font-extrabold text-base mb-3">Resource Blockers</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between py-2 border-b border-line">
+                      <p className="text-xs text-muted">Crew availability in Morobe region</p>
+                      <span className="badge badge-amber">2 teams</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-line">
+                      <p className="text-xs text-muted">Transformer parts shortage (Lae)</p>
+                      <span className="badge badge-red">Critical</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <p className="text-xs text-muted">Vehicle maintenance backlog</p>
+                      <span className="badge badge-blue">3 vehicles</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1508,6 +1604,51 @@ export function AdminPortal({
                   <button onClick={() => showToast('Teams management opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="team" className="size-3.5" /> Manage Teams
                   </button>
+                </div>
+              </div>
+
+              {/* User Access Management */}
+              <div className="card overflow-hidden">
+                <div className="border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">User Access Management</h3>
+                </div>
+                <div className="divide-y divide-line">
+                  {staffUsers.map((staff) => (
+                    <div key={staff.id} className="p-4 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-bold text-ink">{staff.name}</p>
+                        <p className="text-xs text-muted">{staff.email} · {staff.department}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="badge">{staff.role}</span>
+                        <span className={`badge ${staff.status === 'Active' ? 'badge-green' : 'badge-red'}`}>{staff.status}</span>
+                        <button onClick={() => showToast(`Access updated for ${staff.name}`, 'success')} className="button button-secondary text-xs">Edit Access</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* National Trends */}
+              <div className="card p-6">
+                <h3 className="font-extrabold text-base mb-3">National Trends</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2 border-b border-line">
+                    <span className="text-xs text-muted">Most reported issue</span>
+                    <span className="text-xs font-bold text-ink">Power outage (Area blackout)</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 border-b border-line">
+                    <span className="text-xs text-muted">Highest incident province</span>
+                    <span className="text-xs font-bold text-ink">NCD</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2 border-b border-line">
+                    <span className="text-xs text-muted">Average resolution time</span>
+                    <span className="text-xs font-bold text-ink">4.2 hours</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-xs text-muted">Resolution rate</span>
+                    <span className="text-xs font-bold text-ink">{publicReports.length > 0 ? Math.round((publicReports.filter(r => r.status === 'Resolved').length / publicReports.length) * 100) : 0}%</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1554,6 +1695,49 @@ export function AdminPortal({
                   <button onClick={() => showToast('System configuration opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="info" className="size-3.5" /> Configuration
                   </button>
+                </div>
+              </div>
+
+              {/* Service Status */}
+              <div className="card overflow-hidden">
+                <div className="border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Service Status</h3>
+                </div>
+                <div className="divide-y divide-line">
+                  {[
+                    { name: 'API Server', status: 'Online', color: 'badge-green' },
+                    { name: 'Database (MySQL)', status: 'Online', color: 'badge-green' },
+                    { name: 'Auth Service', status: 'Online', color: 'badge-green' },
+                    { name: 'File Storage', status: 'Online', color: 'badge-green' },
+                    { name: 'Email Service', status: 'Degraded', color: 'badge-amber' },
+                  ].map((svc) => (
+                    <div key={svc.name} className="p-4 flex items-center justify-between">
+                      <span className="text-sm font-medium text-ink">{svc.name}</span>
+                      <span className={`badge ${svc.color}`}>{svc.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recent System Logs */}
+              <div className="card overflow-hidden">
+                <div className="border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Recent System Logs</h3>
+                </div>
+                <div className="divide-y divide-line font-mono text-xs">
+                  {[
+                    { time: '10:42 AM', level: 'INFO', msg: 'User login: admin.hq@pngpower.com.pg' },
+                    { time: '10:38 AM', level: 'INFO', msg: 'Report created: PNG-6K8R-24' },
+                    { time: '10:35 AM', level: 'WARN', msg: 'High latency detected on /api/reports' },
+                    { time: '10:30 AM', level: 'INFO', msg: 'Database connection pool refreshed' },
+                    { time: '10:25 AM', level: 'ERROR', msg: 'Email service timeout (retry 2/3)' },
+                  ].map((log, idx) => (
+                    <div key={idx} className="p-3 flex items-start gap-3">
+                      <span className="text-muted shrink-0">{log.time}</span>
+                      <span className={`badge ${log.level === 'ERROR' ? 'badge-red' : log.level === 'WARN' ? 'badge-amber' : 'badge-blue'}`}>{log.level}</span>
+                      <span className="text-ink">{log.msg}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
