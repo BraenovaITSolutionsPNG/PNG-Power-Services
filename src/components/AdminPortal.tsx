@@ -571,7 +571,7 @@ export function AdminPortal({
                     </span>
                     <span className="text-xs font-semibold text-muted">+{publicReports.length} incoming</span>
                   </div>
-                  <p className="mt-4 text-3xl font-extrabold tracking-tight">186</p>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">{publicReports.length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Open Resident Tickets</p>
                 </div>
 
@@ -582,7 +582,7 @@ export function AdminPortal({
                     </span>
                     <span className="text-xs font-semibold text-brand font-bold">8 Critical</span>
                   </div>
-                  <p className="mt-4 text-3xl font-extrabold tracking-tight">42</p>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">{incidentsList.length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Active Feeder Incidents</p>
                 </div>
 
@@ -593,7 +593,7 @@ export function AdminPortal({
                     </span>
                     <span className="text-xs font-semibold text-muted">5 Regions</span>
                   </div>
-                  <p className="mt-4 text-3xl font-extrabold tracking-tight">17</p>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">{staffUsers.filter(u => u.role === 'field').length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Field Crews Deployed</p>
                 </div>
 
@@ -604,7 +604,7 @@ export function AdminPortal({
                     </span>
                     <span className="text-xs font-semibold text-muted">Oldest: 2h 15m</span>
                   </div>
-                  <p className="mt-4 text-3xl font-extrabold tracking-tight">19</p>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">{publicReports.filter(r => r.status === 'Under review').length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Awaiting Triage</p>
                 </div>
               </div>
@@ -645,13 +645,13 @@ export function AdminPortal({
 
                       <div className="flex items-center gap-2 self-start sm:self-auto">
                         <button
-                          onClick={() => alert(`Assigned dispatch crew to Case ${report.caseNumber}`)}
+                          onClick={() => showToast(`Dispatch crew assigned to Case ${report.caseNumber}`, 'success')}
                           className="button button-primary text-xs"
                         >
                           Dispatch Crew
                         </button>
                         <button
-                          onClick={() => alert(`Case ${report.caseNumber} marked as under review`)}
+                          onClick={() => showToast(`Case ${report.caseNumber} marked as under review`, 'info')}
                           className="button button-secondary text-xs"
                         >
                           Review
@@ -684,6 +684,9 @@ export function AdminPortal({
                               <p className="text-xs text-muted">{incident.meta} · {incident.time}</p>
                             </div>
                             <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
+                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Crew assigned' } : i)); showToast(`Crew assigned to ${incident.id}`, 'success') }} className="button button-primary text-xs ml-2">Assign Crew</button>
+                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'In progress' } : i)); showToast(`${incident.id} marked in progress`, 'info') }} className="button button-secondary text-xs">In Progress</button>
+                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Resolved' } : i)); showToast(`${incident.id} resolved`, 'success') }} className="button button-secondary text-xs">Resolve</button>
                           </div>
                         </div>
                       ))}

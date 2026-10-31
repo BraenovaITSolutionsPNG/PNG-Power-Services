@@ -1,0 +1,195 @@
+role === 'operations' && (
+            <div className="space-y-8">
+              {activeSection === 'operations-overview' && (
+                <>
+              {/* Header metrics */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-extrabold tracking-tight">National Operations Hub</h1>
+                  <p className="text-xs text-muted mt-1">
+                    Live triage, public complaint intake, and linesmen coordination.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveSection('public-intake')}
+                  className="button button-primary text-xs"
+                >
+                  <Icon name="document" className="size-4" /> Review Public Reports ({publicReports.length})
+                </button>
+              </div>
+
+              {/* Metrics cards */}
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="card p-5">
+                  <div className="flex items-start justify-between">
+                    <span className="icon-tile metric-blue">
+                      <Icon name="document" />
+                    </span>
+                    <span className="text-xs font-semibold text-muted">+{publicReports.length} incoming</span>
+                  </div>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">186</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Open Resident Tickets</p>
+                </div>
+
+                <div className="card p-5">
+                  <div className="flex items-start justify-between">
+                    <span className="icon-tile metric-red">
+                      <Icon name="alert" />
+                    </span>
+                    <span className="text-xs font-semibold text-brand font-bold">8 Critical</span>
+                  </div>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">42</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Active Feeder Incidents</p>
+                </div>
+
+                <div className="card p-5">
+                  <div className="flex items-start justify-between">
+                    <span className="icon-tile metric-green">
+                      <Icon name="team" />
+                    </span>
+                    <span className="text-xs font-semibold text-muted">5 Regions</span>
+                  </div>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">17</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Field Crews Deployed</p>
+                </div>
+
+                <div className="card p-5">
+                  <div className="flex items-start justify-between">
+                    <span className="icon-tile metric-amber">
+                      <Icon name="clock" />
+                    </span>
+                    <span className="text-xs font-semibold text-muted">Oldest: 2h 15m</span>
+                  </div>
+                  <p className="mt-4 text-3xl font-extrabold tracking-tight">19</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Awaiting Triage</p>
+                </div>
+              </div>
+
+              {/* Live Public Fault Intake Box (Connected to public submissions!) */}
+              <div className="card overflow-hidden">
+                <div className="flex items-center justify-between border-b border-line p-5 bg-surface-raised/40">
+                  <div>
+                    <h2 className="text-base font-extrabold">Public Fault Submissions (Live Intake)</h2>
+                    <p className="text-xs text-muted mt-0.5">
+                      Reports directly submitted through the public website landing page
+                    </p>
+                  </div>
+                  <span className="badge badge-blue">{publicReports.length} submissions in queue</span>
+                </div>
+
+                <div className="divide-y divide-line">
+                  {publicReports.map((report) => (
+                    <div key={report.caseNumber} className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:bg-surface-raised transition">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">
+                            {report.caseNumber}
+                          </span>
+                          <span className="badge badge-amber">{report.status}</span>
+                          <span className="text-xs text-muted">Logged: {report.createdAt}</span>
+                        </div>
+                        <h4 className="mt-1.5 font-bold text-sm text-ink">{report.issueType}</h4>
+                        <p className="text-xs text-muted mt-0.5">
+                          <strong>Location:</strong> {report.location} ({report.province}) · {report.description}
+                        </p>
+                        {report.phone && (
+                          <p className="text-xs text-brand font-semibold mt-1">
+                            Contact: {report.phone} ({report.contactPreference})
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-center gap-2 self-start sm:self-auto">
+                        <button
+                          onClick={() => alert(`Assigned dispatch crew to Case ${report.caseNumber}`)}
+                          className="button button-primary text-xs"
+                        >
+                          Dispatch Crew
+                        </button>
+                        <button
+                          onClick={() => alert(`Case ${report.caseNumber} marked as under review`)}
+                          className="button button-secondary text-xs"
+                        >
+                          Review
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+                </>
+              )}
+
+              {activeSection === 'incidents' && (
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight">Active Incidents</h1>
+                    <p className="text-xs text-muted mt-1">Major grid and feeder incidents</p>
+                  </div>
+                  <div className="card overflow-hidden">
+                    <div className="divide-y divide-line">
+                      {incidentsList.map((incident) => (
+                        <div key={incident.id} className="p-5">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-muted">{incident.id}</span>
+                                <span className={`badge ${incident.priority === 'Critical' ? 'badge-red' : incident.priority === 'High' ? 'badge-amber' : 'badge-blue'}`}>{incident.priority}</span>
+                              </div>
+                              <p className="font-bold text-sm mt-1">{incident.title}</p>
+                              <p className="text-xs text-muted">{incident.meta} · {incident.time}</p>
+                            </div>
+                            <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeSection === 'public-intake' && (
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight">Public Fault Intake</h1>
+                    <p className="text-xs text-muted mt-1">All reports submitted through the public website</p>
+                  </div>
+                  <div className="card overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-line p-5 bg-surface-raised/40">
+                      <div>
+                        <h2 className="text-base font-extrabold">All Public Submissions</h2>
+                        <p className="text-xs text-muted mt-0.5">{publicReports.length} reports</p>
+                      </div>
+                    </div>
+                    <div className="divide-y divide-line">
+                      {publicReports.map((report) => (
+                        <div key={report.caseNumber} className="p-5">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
+                                <span className="badge badge-amber">{report.status}</span>
+                                <span className="text-xs text-muted">{report.createdAt}</span>
+                              </div>
+                              <h4 className="mt-1.5 font-bold text-sm">{report.issueType}</h4>
+                              <p className="text-xs text-muted mt-0.5"><strong>Location:</strong> {report.location} ({report.province})</p>
+                              <p className="text-xs text-muted mt-0.5">{report.description}</p>
+                              {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone} ({report.contactPreference})</p>}
+                            </div>
+                            <div className="flex gap-2">
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'Crew assigned')} className="button button-primary text-xs">Assign Crew</button>
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'In progress')} className="button button-secondary text-xs">Mark In Progress</button>
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'Resolved')} className="button button-secondary text-xs">Resolve</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Field Crew View */}
+          {
