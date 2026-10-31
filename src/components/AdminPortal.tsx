@@ -722,10 +722,12 @@ export function AdminPortal({
                               <p className="font-bold text-sm mt-1">{incident.title}</p>
                               <p className="text-xs text-muted">{incident.meta} · {incident.time}</p>
                             </div>
-                            <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
-                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Crew assigned' } : i)); showToast(`Crew assigned to ${incident.id}`, 'success') }} className="button button-primary text-xs ml-2">Assign Crew</button>
-                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'In progress' } : i)); showToast(`${incident.id} marked in progress`, 'info') }} className="button button-secondary text-xs">In Progress</button>
-                            <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Resolved' } : i)); showToast(`${incident.id} resolved`, 'success') }} className="button button-secondary text-xs">Resolve</button>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
+                              <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Crew assigned' } : i)); showToast(`Crew assigned to ${incident.id}`, 'success') }} className="button button-primary text-xs">Assign Crew</button>
+                              <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'In progress' } : i)); showToast(`${incident.id} marked in progress`, 'info') }} className="button button-secondary text-xs">In Progress</button>
+                              <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Resolved' } : i)); showToast(`${incident.id} resolved`, 'success') }} className="button button-secondary text-xs">Resolve</button>
+                            </div>
                           </div>
                         </div>
                       ))}
