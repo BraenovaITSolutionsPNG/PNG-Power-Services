@@ -1,0 +1,38 @@
+Assign Work Order</h3>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-xs font-bold text-ink mb-1">Select Report</label>
+                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                      {publicReports.map((r) => (
+                        <option key={r.caseNumber} value={r.caseNumber}>{r.caseNumber} - {r.issueType}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-ink mb-1">Assign to Team</label>
+                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                      <option>NCD Dispatch</option>
+                      <option>Lae Field Team</option>
+                      <option>Mt Hagen Center</option>
+                      <option>Kokopo Regional</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-ink mb-1">Accountable Owner</label>
+                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                      {staffUsers.filter(u => u.role === 'field' || u.role === 'operations').map((u) => (
+                        <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-ink mb-1">Next Action</label>
+                    <input placeholder="e.g., Inspect transformer" className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm" />
+                  </div>
+                </div>
+                <button onClick={() => showToast('Work order assigned successfully', 'success')} className="button button-primary text-xs mt-4">
+                  <Icon name="plus" className="size-3.5" /> Assign Work Order
+                </button>
+              </div>
+
+              {/* 

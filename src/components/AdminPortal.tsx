@@ -128,6 +128,12 @@ export function AdminPortal({
   // Track restored work orders for toggle
   const [restoredJobs, setRestoredJobs] = useState<Set<string>>(new Set())
 
+  // Assign Work Order form state
+  const [awoReport, setAwoReport] = useState('')
+  const [awoTeam, setAwoTeam] = useState('NCD Dispatch')
+  const [awoOwner, setAwoOwner] = useState('')
+  const [awoAction, setAwoAction] = useState('')
+
   // Track suggested link confirmations/rejections
   const [confirmedLinks, setConfirmedLinks] = useState<Set<string>>(new Set())
   const [rejectedLinks, setRejectedLinks] = useState<Set<string>>(new Set())
@@ -1521,7 +1527,12 @@ export function AdminPortal({
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <label className="block text-xs font-bold text-ink mb-1">Select Report</label>
-                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                    <select
+                      value={awoReport}
+                      onChange={(e) => setAwoReport(e.target.value)}
+                      className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                    >
+                      <option value="">-- Select a report --</option>
                       {publicReports.map((r) => (
                         <option key={r.caseNumber} value={r.caseNumber}>{r.caseNumber} - {r.issueType}</option>
                       ))}
@@ -1529,7 +1540,11 @@ export function AdminPortal({
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-ink mb-1">Assign to Team</label>
-                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                    <select
+                      value={awoTeam}
+                      onChange={(e) => setAwoTeam(e.target.value)}
+                      className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                    >
                       <option>NCD Dispatch</option>
                       <option>Lae Field Team</option>
                       <option>Mt Hagen Center</option>
@@ -1538,7 +1553,12 @@ export function AdminPortal({
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-ink mb-1">Accountable Owner</label>
-                    <select className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm">
+                    <select
+                      value={awoOwner}
+                      onChange={(e) => setAwoOwner(e.target.value)}
+                      className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                    >
+                      <option value="">-- Select owner --</option>
                       {staffUsers.filter(u => u.role === 'field' || u.role === 'operations').map((u) => (
                         <option key={u.id} value={u.id}>{u.name} ({u.role})</option>
                       ))}
@@ -1546,10 +1566,37 @@ export function AdminPortal({
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-ink mb-1">Next Action</label>
-                    <input placeholder="e.g., Inspect transformer" className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm" />
+                    <input
+                      value={awoAction}
+                      onChange={(e) => setAwoAction(e.target.value)}
+                      placeholder="e.g., Inspect transformer"
+                      className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                    />
                   </div>
                 </div>
-                <button onClick={() => showToast('Work order assigned successfully', 'success')} className="button button-primary text-xs mt-4">
+                <button
+                  onClick={() => {
+                    if (!awoReport) {
+                      showToast('Please select a report', 'error')
+                      return
+                    }
+                    const report = publicReports.find(r => r.caseNumber === awoReport)
+                    const owner = staffUsers.find(u => u.id === awoOwner)
+                    const woNumber = 'WO-' + Math.random().toString(36).substring(2, 6).toUpperCase()
+                    setFieldJobs([...fieldJobs, {
+                      id: woNumber,
+                      title: awoAction || report?.issueType || 'New work order',
+                      place: report ? `${report.location} (${report.province})` : 'Unknown',
+                      priority: 'Normal',
+                      time: 'Just assigned',
+                      status: 'Assigned',
+                    }])
+                    showToast(`Work order ${woNumber} assigned to ${awoTeam} for ${awoReport}`, 'success')
+                    setAwoReport('')
+                    setAwoAction('')
+                  }}
+                  className="button button-primary text-xs mt-4"
+                >
                   <Icon name="plus" className="size-3.5" /> Assign Work Order
                 </button>
               </div>
