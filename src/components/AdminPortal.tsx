@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Icon, Brand, type IconName } from './Icons'
-import type { AdminRole, PublicReport, Incident, WorkOrder } from '../types'
+import type { AdminRole, PublicReport, Incident, WorkOrder, StaffUser } from '../types'
 
 interface AdminPortalProps {
   onBackToPublic: () => void
@@ -11,6 +11,7 @@ interface AdminPortalProps {
 export function AdminPortal({
   onBackToPublic,
   publicReports,
+  onUpdateReportStatus,
 }: AdminPortalProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [role, setRole] = useState<AdminRole>('operations')
@@ -252,7 +253,7 @@ export function AdminPortal({
                   onClick={() => handleQuickLogin('staff' as AdminRole)}
                   className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
                 >
-                  <Icon name="users" className="size-4 mx-auto text-white/70" />
+                  <Icon name="user" className="size-4 mx-auto text-white/70" />
                   <span className="block mt-1 text-[0.62rem] font-bold">Staff</span>
                 </button>
               </div>
@@ -650,6 +651,8 @@ export function AdminPortal({
                   ))}
                 </div>
               </div>
+                </>
+              )}
 
               {activeSection === 'incidents' && (
                 <div className="space-y-6">
@@ -676,7 +679,6 @@ export function AdminPortal({
                       ))}
                     </div>
                   </div>
-                </div>
                 </div>
               )}
 
@@ -724,54 +726,80 @@ export function AdminPortal({
           )}
 
           {/* Field Crew View */}
-            </div>
-          )}
-
           {role === 'field' && (
             <div className="space-y-6">
               {activeSection === 'field-assignments' && (
                 <>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <h1 className="text-2xl font-extrabold tracking-tight">Field Crew Work Orders</h1>
-                  <p className="text-xs text-muted mt-1">
-                    Team Delta · Assigned mobile assignments & offline synchronization
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 rounded-xl bg-success-soft px-3 py-2 text-xs font-bold text-success-dark">
-                  <Icon name="check" className="size-4" /> All offline notes synced
-                </div>
-              </div>
-
-              <div className="grid gap-4">
-                {fieldJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className={`card p-5 transition ${selectedJob === job.id ? 'ring-2 ring-brand' : ''}`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-muted">{job.id}</span>
-                          <span className="badge badge-amber">{job.priority}</span>
-                          <span className="text-xs text-muted">{job.time}</span>
-                        </div>
-                        <h3 className="mt-1 text-base font-extrabold">{job.title}</h3>
-                        <p className="text-xs text-muted mt-0.5 flex items-center gap-1.5">
-                          <Icon name="map" className="size-3.5" /> {job.place}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          onClick={() => setSelectedJob(selectedJob === job.id ? null : job.id)}
-                          className="button button-primary text-xs"
-                        >
-                          {job.status} <Icon name="chevron" className="size-3.5" />
-                        </button>
-                      </div>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                      <h1 className="text-2xl font-extrabold tracking-tight">Field Crew Work Orders</h1>
+                      <p className="text-xs text-muted mt-1">
+                        Team Delta · Assigned mobile assignments & offline synchronization
+                      </p>
                     </div>
+                    <div className="flex items-center gap-2 rounded-xl bg-success-soft px-3 py-2 text-xs font-bold text-success-dark">
+                      <Icon name="check" className="size-4" /> All offline notes synced
+                    </div>
+                  </div>
 
+                  <div className="grid gap-4">
+                    {fieldJobs.map((job) => (
+                      <div
+                        key={job.id}
+                        className={`card p-5 transition ${selectedJob === job.id ? 'ring-2 ring-brand' : ''}`}
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-xs font-bold text-muted">{job.id}</span>
+                              <span className="badge badge-amber">{job.priority}</span>
+                              <span className="text-xs text-muted">{job.time}</span>
+                            </div>
+                            <h3 className="mt-1 text-base font-extrabold">{job.title}</h3>
+                            <p className="text-xs text-muted mt-0.5 flex items-center gap-1.5">
+                              <Icon name="map" className="size-3.5" /> {job.place}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setSelectedJob(selectedJob === job.id ? null : job.id)}
+                              className="button button-primary text-xs"
+                            >
+                              {job.status} <Icon name="chevron" className="size-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {selectedJob === job.id && (
+                          <div className="mt-4 pt-4 border-t border-line bg-surface-raised/60 -mx-5 -mb-5 p-5 rounded-b-xl space-y-3">
+                            <p className="text-xs font-bold text-ink">Field Actions & Logs</p>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => alert(`Opening camera for site photo at ${job.place}`)}
+                                className="button button-secondary text-xs"
+                              >
+                                <Icon name="plus" className="size-3.5" /> Take Site Photo
+                              </button>
+                              <button
+                                onClick={() => {
+                                  alert(`Work order ${job.id} marked as Restored/Completed!`)
+                                  setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
+                                }}
+                                className="button button-primary text-xs bg-success hover:bg-success-dark"
+                              >
+                                <Icon name="check" className="size-3.5" /> Mark Restored
+                              </button>
+                            </div>
+                            <p className="text-[0.7rem] text-muted flex items-center gap-1.5">
+                              <Icon name="shield" className="size-3.5 text-warning" />
+                              Ensure site voltage test is zero before handling lines or transformers.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </>
               )}
 
@@ -814,73 +842,117 @@ export function AdminPortal({
             <div className="space-y-6">
               {activeSection === 'admin-system' && (
                 <>
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-extrabold tracking-tight">System & Infrastructure Admin</h1>
-                  <p className="text-xs text-muted mt-1">
-                    National utility telemetry, server status, security audits, and access management.
-                  </p>
-                </div>
-                <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
-                  <Icon name="plus" className="size-3.5" /> Add Staff
-                </button>
-              </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-2xl font-extrabold tracking-tight">System & Infrastructure Admin</h1>
+                      <p className="text-xs text-muted mt-1">
+                        National utility telemetry, server status, security audits, and access management.
+                      </p>
+                    </div>
+                    <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
+                      <Icon name="plus" className="size-3.5" /> Add Staff
+                    </button>
+                  </div>
 
-              <div className="grid gap-5 sm:grid-cols-3">
-                <div className="card p-5">
-                  <span className="badge badge-blue">Telemetry Server</span>
-                  <p className="mt-3 text-2xl font-extrabold text-ink">99.94%</p>
-                  <p className="text-xs text-muted mt-0.5">Uptime across national SCADA links</p>
-                </div>
-                <div className="card p-5">
-                  <span className="badge badge-amber">Public Inquiries</span>
-                  <p className="mt-3 text-2xl font-extrabold text-ink">{publicReports.length} Total</p>
-                  <p className="text-xs text-muted mt-0.5">Logged today across all provinces</p>
-                </div>
-                <div className="card p-5">
-                  <span className="badge badge-red">Active Dispatches</span>
-                  <p className="mt-3 text-2xl font-extrabold text-ink">14 Teams</p>
-                  <p className="text-xs text-muted mt-0.5">Currently mobilized in the field</p>
-                </div>
-              </div>
+                  <div className="grid gap-5 sm:grid-cols-3">
+                    <div className="card p-5">
+                      <span className="badge badge-blue">Telemetry Server</span>
+                      <p className="mt-3 text-2xl font-extrabold text-ink">99.94%</p>
+                      <p className="text-xs text-muted mt-0.5">Uptime across national SCADA links</p>
+                    </div>
+                    <div className="card p-5">
+                      <span className="badge badge-amber">Public Inquiries</span>
+                      <p className="mt-3 text-2xl font-extrabold text-ink">{publicReports.length} Total</p>
+                      <p className="text-xs text-muted mt-0.5">Logged today across all provinces</p>
+                    </div>
+                    <div className="card p-5">
+                      <span className="badge badge-red">Active Dispatches</span>
+                      <p className="mt-3 text-2xl font-extrabold text-ink">14 Teams</p>
+                      <p className="text-xs text-muted mt-0.5">Currently mobilized in the field</p>
+                    </div>
+                  </div>
 
-              <div className="card p-6">
-                <h3 className="font-extrabold text-base mb-4">Staff Directory</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="border-b border-line text-xs text-muted">
-                        <th className="text-left font-semibold py-2">ID</th>
-                        <th className="text-left font-semibold py-2">Name</th>
-                        <th className="text-left font-semibold py-2">Email</th>
-                        <th className="text-left font-semibold py-2">Role</th>
-                        <th className="text-left font-semibold py-2">Department</th>
-                        <th className="text-left font-semibold py-2">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {staffUsers.map((staff) => (
-                        <tr key={staff.id} className="border-b border-line last:border-0">
-                          <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
-                          <td className="py-2.5 font-semibold text-ink">{staff.name}</td>
-                          <td className="py-2.5 text-muted">{staff.email}</td>
-                          <td className="py-2.5">
-                            <span className={`badge ${staff.role === 'admin' ? 'badge-blue' : staff.role === 'operations' ? 'badge-amber' : staff.role === 'field' ? 'badge-green' : ''}`}>
-                              {staff.role}
-                            </span>
-                          </td>
-                          <td className="py-2.5 text-muted">{staff.department}</td>
-                          <td className="py-2.5">
-                            <span className={`badge ${staff.status === 'Active' ? 'badge-green' : 'badge-red'}`}>
-                              {staff.status}
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="card p-6">
+                    <h3 className="font-extrabold text-base mb-4">Staff Directory</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-line text-xs text-muted">
+                            <th className="text-left font-semibold py-2">ID</th>
+                            <th className="text-left font-semibold py-2">Name</th>
+                            <th className="text-left font-semibold py-2">Email</th>
+                            <th className="text-left font-semibold py-2">Role</th>
+                            <th className="text-left font-semibold py-2">Department</th>
+                            <th className="text-left font-semibold py-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {staffUsers.map((staff) => (
+                            <tr key={staff.id} className="border-b border-line last:border-0">
+                              <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
+                              <td className="py-2.5 font-semibold text-ink">{staff.name}</td>
+                              <td className="py-2.5 text-muted">{staff.email}</td>
+                              <td className="py-2.5">
+                                <span className={`badge ${staff.role === 'admin' ? 'badge-blue' : staff.role === 'operations' ? 'badge-amber' : staff.role === 'field' ? 'badge-green' : ''}`}>
+                                  {staff.role}
+                                </span>
+                              </td>
+                              <td className="py-2.5 text-muted">{staff.department}</td>
+                              <td className="py-2.5">
+                                <span className={`badge ${staff.status === 'Active' ? 'badge-green' : 'badge-red'}`}>
+                                  {staff.status}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeSection === 'admin-users' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-2xl font-extrabold tracking-tight">User Management</h1>
+                      <p className="text-xs text-muted mt-1">Manage staff accounts and permissions</p>
+                    </div>
+                    <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
+                      <Icon name="plus" className="size-3.5" /> Add Staff
+                    </button>
+                  </div>
+                  <div className="card p-6">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-line text-xs text-muted">
+                            <th className="text-left font-semibold py-2">ID</th>
+                            <th className="text-left font-semibold py-2">Name</th>
+                            <th className="text-left font-semibold py-2">Email</th>
+                            <th className="text-left font-semibold py-2">Role</th>
+                            <th className="text-left font-semibold py-2">Department</th>
+                            <th className="text-left font-semibold py-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {staffUsers.map((staff) => (
+                            <tr key={staff.id} className="border-b border-line last:border-0">
+                              <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
+                              <td className="py-2.5 font-semibold">{staff.name}</td>
+                              <td className="py-2.5 text-muted">{staff.email}</td>
+                              <td className="py-2.5"><span className="badge">{staff.role}</span></td>
+                              <td className="py-2.5 text-muted">{staff.department}</td>
+                              <td className="py-2.5"><span className="badge badge-green">{staff.status}</span></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </main>
@@ -947,53 +1019,9 @@ export function AdminPortal({
                 <button onClick={() => setShowAddStaff(false)} className="button button-secondary flex-1">Cancel</button>
               </div>
             </div>
-              </div>
-                </>
-              )}
-
-              {activeSection === 'admin-users' && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h1 className="text-2xl font-extrabold tracking-tight">User Management</h1>
-                      <p className="text-xs text-muted mt-1">Manage staff accounts and permissions</p>
-                    </div>
-                    <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
-                      <Icon name="plus" className="size-3.5" /> Add Staff
-                    </button>
-                  </div>
-                  <div className="card p-6">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="border-b border-line text-xs text-muted">
-                            <th className="text-left font-semibold py-2">ID</th>
-                            <th className="text-left font-semibold py-2">Name</th>
-                            <th className="text-left font-semibold py-2">Email</th>
-                            <th className="text-left font-semibold py-2">Role</th>
-                            <th className="text-left font-semibold py-2">Department</th>
-                            <th className="text-left font-semibold py-2">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {staffUsers.map((staff) => (
-                            <tr key={staff.id} className="border-b border-line last:border-0">
-                              <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
-                              <td className="py-2.5 font-semibold">{staff.name}</td>
-                              <td className="py-2.5 text-muted">{staff.email}</td>
-                              <td className="py-2.5"><span className="badge">{staff.role}</span></td>
-                              <td className="py-2.5 text-muted">{staff.department}</td>
-                              <td className="py-2.5"><span className="badge badge-green">{staff.status}</span></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
