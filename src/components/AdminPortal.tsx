@@ -132,7 +132,7 @@ export function AdminPortal({
   const [ccCallerName, setCcCallerName] = useState('')
   const [ccCallerPhone, setCcCallerPhone] = useState('')
   const [ccIssueType, setCcIssueType] = useState('Power outage (Area blackout)')
-  const [ccProvince, setCcProvince] = useState('NCD')
+  const [ccProvince, setCcProvince] = useState('National Capital District (NCD)')
   const [ccLocation, setCcLocation] = useState('')
   const [ccDescription, setCcDescription] = useState('')
   const [ccLookupCase, setCcLookupCase] = useState('')
@@ -1099,16 +1099,28 @@ export function AdminPortal({
                           onChange={(e) => setCcProvince(e.target.value)}
                           className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
                         >
-                          <option>NCD</option>
                           <option>Central</option>
-                          <option>Morobe</option>
+                          <option>Chimbu (Simbu)</option>
                           <option>Eastern Highlands</option>
-                          <option>Western Highlands</option>
                           <option>East New Britain</option>
+                          <option>East Sepik</option>
+                          <option>Enga</option>
+                          <option>Gulf</option>
+                          <option>Hela</option>
+                          <option>Jiwaka</option>
                           <option>Madang</option>
-                          <option>New Ireland</option>
-                          <option>West New Britain</option>
+                          <option>Manus</option>
                           <option>Milne Bay</option>
+                          <option>Morobe</option>
+                          <option>National Capital District (NCD)</option>
+                          <option>New Ireland</option>
+                          <option>Oro (Northern)</option>
+                          <option>Sandaun (West Sepik)</option>
+                          <option>Southern Highlands</option>
+                          <option>West New Britain</option>
+                          <option>Western</option>
+                          <option>Western Highlands</option>
+                          <option>West Sepik</option>
                         </select>
                       </div>
                     </div>
