@@ -407,7 +407,7 @@ export function AdminPortal({
       <aside
         className={`fixed inset-y-0 left-0 z-40 w-72 bg-sidebar transition-transform lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        } top-8`}
+        } top-0`}
       >
         <div className="flex h-full flex-col overflow-y-auto px-5 py-6">
           <Brand inverse />
@@ -580,8 +580,8 @@ export function AdminPortal({
       </aside>
 
       {/* Main Content Area */}
-      <div className="lg:pl-72 pt-8">
-        <header className="sticky top-8 z-30 flex h-16 items-center border-b border-line bg-white/90 px-5 backdrop-blur-md sm:px-8">
+      <div className="lg:pl-72">
+        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-line bg-white/95 px-5 backdrop-blur-md shadow-sm sm:px-8">
           <button
             className="mr-4 grid size-10 place-items-center rounded-lg border border-line lg:hidden"
             aria-label="Open navigation"
