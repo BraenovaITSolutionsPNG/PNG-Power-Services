@@ -163,6 +163,11 @@ export function AdminPortal({
       if (user.role === 'operations') setActiveSection('operations-overview')
       else if (user.role === 'field') setActiveSection('field-assignments')
       else if (user.role === 'admin') setActiveSection('admin-system')
+      else if (user.role === 'staff') setActiveSection('call-centre')
+      else if (user.role === 'regional_coordinator') setActiveSection('regional-triage')
+      else if (user.role === 'regional_manager') setActiveSection('regional-performance')
+      else if (user.role === 'hq_admin') setActiveSection('hq-config')
+      else if (user.role === 'system_admin') setActiveSection('system-health')
       else setActiveSection('operations-overview')
       setIsAuthenticated(true)
       setAuthError('')
@@ -310,31 +315,10 @@ export function AdminPortal({
             Internal Workspace
           </div>
           <div className="mt-2 space-y-1">
-            {[
-              { key: 'operations', label: 'Operations Hub', icon: 'briefcase', section: 'operations-overview' },
-              { key: 'field', label: 'Field Crew Work', icon: 'wrench', section: 'field-assignments' },
-              { key: 'admin', label: 'Admin & Analytics', icon: 'shield', section: 'admin-system' },
-              { key: 'staff', label: 'Call Centre', icon: 'phone', section: 'call-centre' },
-              { key: 'regional_coordinator', label: 'Regional Coord', icon: 'map', section: 'regional-triage' },
-              { key: 'regional_manager', label: 'Regional Manager', icon: 'signal', section: 'regional-performance' },
-              { key: 'hq_admin', label: 'HQ Admin', icon: 'info', section: 'hq-config' },
-              { key: 'system_admin', label: 'System Admin', icon: 'lock', section: 'system-health' },
-            ].map((r) => (
-              <button
-                key={r.key}
-                onClick={() => {
-                  setRole(r.key as AdminRole)
-                  setActiveSection(r.section)
-                }}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition ${
-                  role === r.key ? 'bg-brand text-white shadow-brand' : 'text-white/60 hover:bg-white/5'
-                }`}
-              >
-                <Icon name={r.icon as any} className="size-4" />
-                <span className="truncate">{r.label}</span>
-                {role === r.key && <span className="ml-auto size-1.5 rounded-full bg-white shrink-0" />}
-              </button>
-            ))}
+            <div className="flex items-center gap-3 rounded-xl bg-brand/20 px-3 py-2.5 text-sm font-semibold text-white">
+              <Icon name="user" className="size-4" />
+              <span className="truncate">{role.replace('_', ' ')}</span>
+            </div>
           </div>
 
           <div className="my-6 h-px bg-white/10" />
