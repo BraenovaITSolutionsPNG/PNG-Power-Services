@@ -677,7 +677,10 @@ export function AdminPortal({
                     </div>
                   </div>
                 </div>
+                </div>
               )}
+
+              {activeSection === 'public-intake' && (
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-2xl font-extrabold tracking-tight">Public Fault Intake</h1>
@@ -717,61 +720,6 @@ export function AdminPortal({
                   </div>
                 </div>
               )}
-              <div className="card overflow-hidden">
-                <div className="flex items-center justify-between border-b border-line p-5">
-                  <h2 className="text-base font-extrabold">Major Grid & Feeder Incidents</h2>
-                  <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    className="control h-9 w-auto py-0 text-xs"
-                  >
-                    <option>All incidents</option>
-                    <option>Critical priority</option>
-                    <option>High priority</option>
-                  </select>
-                </div>
-                <div className="divide-y divide-line">
-                  {incidentsList.map((incident) => (
-                    <div key={incident.id} className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex items-start gap-3">
-                        <span
-                          className={`mt-1 size-3 rounded-full shrink-0 ${
-                            incident.priority === 'Critical'
-                              ? 'bg-brand'
-                              : incident.priority === 'High'
-                              ? 'bg-warning'
-                              : 'bg-blue'
-                          }`}
-                        />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-xs font-bold text-muted">{incident.id}</span>
-                            <span
-                              className={`badge ${
-                                incident.priority === 'Critical'
-                                  ? 'badge-red'
-                                  : incident.priority === 'High'
-                                  ? 'badge-amber'
-                                  : 'badge-blue'
-                              }`}
-                            >
-                              {incident.priority}
-                            </span>
-                          </div>
-                          <p className="font-bold text-sm mt-1">{incident.title}</p>
-                          <p className="text-xs text-muted">{incident.meta} · {incident.time}</p>
-                        </div>
-                      </div>
-
-                      <div className="text-left sm:text-right">
-                        <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">
-                          {incident.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
 
