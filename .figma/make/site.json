@@ -1,0 +1,10 @@
+{
+  "description": "Provides a user-friendly frontend based on the PDF’s content, helping visitors quickly find the information and resources they need.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
