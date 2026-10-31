@@ -74,8 +74,8 @@ export function AdminPortal({
   const [incidentsList, setIncidentsList] = useState<Incident[]>([
     {
       id: 'INC-2048',
-      title: 'Area outage — Gerehu Stage 3',
-      meta: '14 linked reports · NCD',
+      title: 'Area outage â€” Gerehu Stage 3',
+      meta: '14 linked reports  -  NCD',
       priority: 'High',
       status: 'Crew assigned',
       time: '18 min ago',
@@ -83,8 +83,8 @@ export function AdminPortal({
     },
     {
       id: 'INC-2047',
-      title: 'Transformer fault — Lae Market',
-      meta: '7 linked reports · Morobe',
+      title: 'Transformer fault â€” Lae Market',
+      meta: '7 linked reports  -  Morobe',
       priority: 'Critical',
       status: 'In progress',
       time: '34 min ago',
@@ -92,8 +92,8 @@ export function AdminPortal({
     },
     {
       id: 'INC-2046',
-      title: 'Damaged pole — Kokopo Road',
-      meta: '3 linked reports · East New Britain',
+      title: 'Damaged pole â€” Kokopo Road',
+      meta: '3 linked reports  -  East New Britain',
       priority: 'Medium',
       status: 'Under review',
       time: '1 hr ago',
@@ -101,8 +101,8 @@ export function AdminPortal({
     },
     {
       id: 'INC-2045',
-      title: 'Intermittent supply — Boroko',
-      meta: '5 linked reports · NCD',
+      title: 'Intermittent supply â€” Boroko',
+      meta: '5 linked reports  -  NCD',
       priority: 'Medium',
       status: 'Pending parts',
       time: '2 hrs ago',
@@ -312,7 +312,7 @@ export function AdminPortal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-lg border border-white/15 bg-white/10 px-3.5 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 />
               </div>
 
@@ -340,11 +340,11 @@ export function AdminPortal({
       <div className="bg-brand-dark px-4 py-2 text-xs text-white flex items-center justify-between z-50 relative">
         <div className="flex items-center gap-2">
           <span className="grid size-4 place-items-center rounded bg-white text-brand-dark font-bold text-[0.65rem]">
-            ✓
+            âœ“
           </span>
           <span className="font-bold">PNG POWER INTERNAL WORKSPACE</span>
           <span className="hidden sm:inline text-white/70">
-            · Signed in as <strong className="text-white">{username}</strong> ({role.toUpperCase()})
+             -  Signed in as <strong className="text-white">{username}</strong> ({role.toUpperCase()})
           </span>
         </div>
         <div className="flex items-center gap-3">
@@ -665,7 +665,7 @@ export function AdminPortal({
                         </div>
                         <h4 className="mt-1.5 font-bold text-sm text-ink">{report.issueType}</h4>
                         <p className="text-xs text-muted mt-0.5">
-                          <strong>Location:</strong> {report.location} ({report.province}) · {report.description}
+                          <strong>Location:</strong> {report.location} ({report.province})  -  {report.description}
                         </p>
                         {report.phone && (
                           <p className="text-xs text-brand font-semibold mt-1">
@@ -741,7 +741,7 @@ export function AdminPortal({
                                 <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
                               </div>
                               <p className="font-bold text-sm mt-1.5 text-ink">{incident.title}</p>
-                              <p className="text-xs text-muted mt-0.5">{incident.meta} · {incident.time}</p>
+                              <p className="text-xs text-muted mt-0.5">{incident.meta}  -  {incident.time}</p>
                             </div>
                             <div className="flex items-center gap-1.5 shrink-0">
                               <button onClick={() => { setIncidentsList(incidentsList.map(i => i.id === incident.id ? { ...i, status: 'Crew assigned' } : i)); showToast(`Crew assigned to ${incident.id}`, 'success') }} className="button button-primary text-xs">Assign Crew</button>
@@ -865,7 +865,7 @@ export function AdminPortal({
                     <div>
                       <h1 className="text-2xl font-extrabold tracking-tight">Field Crew Work Orders</h1>
                       <p className="text-xs text-muted mt-1">
-                        Team Delta · Assigned mobile assignments & offline synchronization
+                        Team Delta  -  Assigned mobile assignments & offline synchronization
                       </p>
                     </div>
                     <div className="flex items-center gap-2 rounded-xl bg-success-soft px-3 py-2 text-xs font-bold text-success-dark">
@@ -1483,7 +1483,7 @@ export function AdminPortal({
                       <div key={prov} className="p-4 flex items-center justify-between">
                         <div>
                           <p className="font-bold text-sm text-ink">{prov}</p>
-                          <p className="text-xs text-muted">{count} total � {resolved} resolved</p>
+                          <p className="text-xs text-muted">{count} total  -  {resolved} resolved</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-24 h-2 rounded-full bg-surface-raised overflow-hidden">
@@ -1513,7 +1513,7 @@ export function AdminPortal({
                           <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
                           <span className="badge badge-amber">{report.status}</span>
                         </div>
-                        <p className="text-xs text-muted mt-1">{report.issueType} � {report.location} ({report.province})</p>
+                        <p className="text-xs text-muted mt-1">{report.issueType}  -  {report.location} ({report.province})</p>
                       </div>
                       <div className="flex gap-2 shrink-0">
                         <button onClick={() => showToast(`Escalated ${report.caseNumber} to regional coordinator`, 'success')} className="button button-primary text-xs">Escalate</button>
@@ -1617,7 +1617,7 @@ export function AdminPortal({
                     <div key={staff.id} className="p-4 flex items-center justify-between">
                       <div>
                         <p className="text-sm font-bold text-ink">{staff.name}</p>
-                        <p className="text-xs text-muted">{staff.email} � {staff.department}</p>
+                        <p className="text-xs text-muted">{staff.email}  -  {staff.department}</p>
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="badge">{staff.role}</span>
