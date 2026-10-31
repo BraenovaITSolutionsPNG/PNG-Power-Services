@@ -580,8 +580,8 @@ export function AdminPortal({
       </aside>
 
       {/* Main Content Area */}
-      <div className="lg:pl-72">
-        <header className="sticky top-0 z-30 flex h-16 items-center border-b border-line bg-white/95 px-5 backdrop-blur-md shadow-sm sm:px-8">
+      <div className="lg:pl-72 pt-16">
+        <header className="fixed top-0 right-0 left-0 lg:left-72 z-30 flex h-16 items-center border-b border-line bg-white/95 px-5 backdrop-blur-md shadow-sm sm:px-8">
           <button
             className="mr-4 grid size-10 place-items-center rounded-lg border border-line lg:hidden"
             aria-label="Open navigation"
