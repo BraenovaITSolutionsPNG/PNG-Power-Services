@@ -74,7 +74,7 @@ export function AdminPortal({
   const [incidentsList, setIncidentsList] = useState<Incident[]>([
     {
       id: 'INC-2048',
-      title: 'Area outage â€” Gerehu Stage 3',
+      title: 'Area outage  -  Gerehu Stage 3',
       meta: '14 linked reports  -  NCD',
       priority: 'High',
       status: 'Crew assigned',
@@ -83,7 +83,7 @@ export function AdminPortal({
     },
     {
       id: 'INC-2047',
-      title: 'Transformer fault â€” Lae Market',
+      title: 'Transformer fault  -  Lae Market',
       meta: '7 linked reports  -  Morobe',
       priority: 'Critical',
       status: 'In progress',
@@ -92,7 +92,7 @@ export function AdminPortal({
     },
     {
       id: 'INC-2046',
-      title: 'Damaged pole â€” Kokopo Road',
+      title: 'Damaged pole  -  Kokopo Road',
       meta: '3 linked reports  -  East New Britain',
       priority: 'Medium',
       status: 'Under review',
@@ -101,7 +101,7 @@ export function AdminPortal({
     },
     {
       id: 'INC-2045',
-      title: 'Intermittent supply â€” Boroko',
+      title: 'Intermittent supply  -  Boroko',
       meta: '5 linked reports  -  NCD',
       priority: 'Medium',
       status: 'Pending parts',
@@ -127,6 +127,10 @@ export function AdminPortal({
 
   // Track restored work orders for toggle
   const [restoredJobs, setRestoredJobs] = useState<Set<string>>(new Set())
+
+  // Track suggested link confirmations/rejections
+  const [confirmedLinks, setConfirmedLinks] = useState<Set<string>>(new Set())
+  const [rejectedLinks, setRejectedLinks] = useState<Set<string>>(new Set())
 
   // Track reviewed reports for toggle
   const [reviewedReports, setReviewedReports] = useState<Set<string>>(new Set())
@@ -312,7 +316,7 @@ export function AdminPortal({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full rounded-lg border border-white/15 bg-white/10 px-3.5 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder=""
                 />
               </div>
 
@@ -340,7 +344,7 @@ export function AdminPortal({
       <div className="bg-brand-dark px-4 py-2 text-xs text-white flex items-center justify-between z-50 relative">
         <div className="flex items-center gap-2">
           <span className="grid size-4 place-items-center rounded bg-white text-brand-dark font-bold text-[0.65rem]">
-            âœ“
+            "
           </span>
           <span className="font-bold">PNG POWER INTERNAL WORKSPACE</span>
           <span className="hidden sm:inline text-white/70">
@@ -1449,21 +1453,65 @@ export function AdminPortal({
                   <p className="text-xs text-muted mt-0.5">System-suggested groupings based on location and issue type</p>
                 </div>
                 <div className="divide-y divide-line">
-                  {incidentsList.slice(0, 2).map((incident) => (
+                  {incidentsList.slice(0, 2).map((incident) => {
+                    const isConfirmed = confirmedLinks.has(incident.id)
+                    const isRejected = rejectedLinks.has(incident.id)
+                    if (isRejected) return null
+                    return (
                     <div key={incident.id} className="p-4 flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
                           <span className="font-mono text-xs font-bold text-muted">{incident.id}</span>
                           <span className="text-xs font-bold text-ink">{incident.title}</span>
+                          {isConfirmed && <span className="badge badge-green">Confirmed</span>}
                         </div>
                         <p className="text-xs text-muted mt-0.5">{incident.meta}</p>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => showToast(`Confirmed link to ${incident.id}`, 'success')} className="button button-primary text-xs">Confirm Link</button>
-                        <button onClick={() => showToast(`Link to ${incident.id} rejected`, 'info')} className="button button-secondary text-xs">Reject</button>
+                        <button
+                          onClick={() => {
+                            setConfirmedLinks((prev) => {
+                              const next = new Set(prev)
+                              if (next.has(incident.id)) {
+                                next.delete(incident.id)
+                                showToast(`Link to ${incident.id} unconfirmed`, 'info')
+                              } else {
+                                next.add(incident.id)
+                                showToast(`Confirmed link to ${incident.id}`, 'success')
+                              }
+                              return next
+                            })
+                          }}
+                          className={`button text-xs ${isConfirmed ? 'bg-brand/20 text-brand border border-brand/40 hover:bg-brand/30' : 'button-primary'}`}
+                        >
+                          {isConfirmed ? 'Unconfirm' : 'Confirm Link'}
+                        </button>
+                        <button
+                          onClick={() => {
+                            setRejectedLinks((prev) => {
+                              const next = new Set(prev)
+                              next.add(incident.id)
+                              showToast(`Link to ${incident.id} rejected`, 'info')
+                              return next
+                            })
+                            // Also remove from confirmed if it was confirmed
+                            setConfirmedLinks((prev) => {
+                              const next = new Set(prev)
+                              next.delete(incident.id)
+                              return next
+                            })
+                          }}
+                          className="button button-secondary text-xs"
+                        >
+                          Reject
+                        </button>
                       </div>
                     </div>
-                  ))}
+                    )
+                  })}
+                  {incidentsList.slice(0, 2).filter(i => !rejectedLinks.has(i.id)).length === 0 && (
+                    <div className="p-8 text-center text-sm text-muted">All suggested links processed.</div>
+                  )}
                 </div>
               </div>
 
@@ -1514,7 +1562,7 @@ export function AdminPortal({
                     <div key={r.caseNumber} className="flex items-center justify-between py-2 border-b border-line last:border-0">
                       <div>
                         <p className="text-xs font-bold text-ink">{r.caseNumber}</p>
-                        <p className="text-[0.7rem] text-muted">{r.issueType} · {r.location}</p>
+                        <p className="text-[0.7rem] text-muted">{r.issueType}  -  {r.location}</p>
                       </div>
                       <span className="badge badge-red">Overdue</span>
                     </div>
