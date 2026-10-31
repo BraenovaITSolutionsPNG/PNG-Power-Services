@@ -755,6 +755,15 @@ export function AdminPortal({
                             <p className="text-xs font-bold text-ink">Field Actions & Logs</p>
                             <div className="flex flex-wrap gap-2">
                               <button
+                                onClick={() => {
+                                  const note = prompt('Enter log note:')
+                                  if (note) alert(`Log note added to ${job.id}: ${note}`)
+                                }}
+                                className="button button-secondary text-xs"
+                              >
+                                <Icon name="document" className="size-3.5" /> Add Log Note
+                              </button>
+                              <button
                                 onClick={() => alert(`Opening camera for site photo at ${job.place}`)}
                                 className="button button-secondary text-xs"
                               >
