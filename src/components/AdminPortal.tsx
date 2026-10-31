@@ -22,6 +22,7 @@ export function AdminPortal({
   const [username, setUsername] = useState('ops.lead@pngpower.com.pg')
   const [password, setPassword] = useState('')
   const [authError, setAuthError] = useState('')
+  const [authToken, setAuthToken] = useState('')
 
   // Staff management
   const [staffUsers, setStaffUsers] = useState<StaffUser[]>([
@@ -165,6 +166,10 @@ export function AdminPortal({
       else setActiveSection('operations-overview')
       setIsAuthenticated(true)
       setAuthError('')
+      if (user.token) {
+        setAuthToken(user.token)
+        localStorage.setItem('png_power_token', user.token)
+      }
     } catch {
       setAuthError('Network error. Please try again.')
     }
@@ -193,6 +198,10 @@ export function AdminPortal({
       else if (user.role === 'admin') setActiveSection('admin-system')
       else setActiveSection('operations-overview')
       setIsAuthenticated(true)
+      if (user.token) {
+        setAuthToken(user.token)
+        localStorage.setItem('png_power_token', user.token)
+      }
     } catch {
       // fallback
       setRole(targetRole)
@@ -1050,6 +1059,8 @@ export function AdminPortal({
     </div>
   )
 }
+
+
 
 
 
