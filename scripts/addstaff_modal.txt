@@ -1,0 +1,6 @@
+showAddStaff && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold">Add New Staff</h3>
+              <button onClick={() => setShowAddStaff(false)}

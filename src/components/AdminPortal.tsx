@@ -222,11 +222,31 @@ export function AdminPortal({
     }
   }
 
-  function handleAddStaff() {
-    const id = `STF-${String(staffUsers.length + 1).padStart(3, '0')}`
-    setStaffUsers([...staffUsers, { ...(newStaff as StaffUser), id }])
-    setShowAddStaff(false)
-    setNewStaff({ role: 'staff', status: 'Active', department: 'Operations' })
+  async function handleAddStaff() {
+    try {
+      const token = localStorage.getItem('png_power_token')
+      const res = await fetch('/api/staff', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(newStaff),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        showToast(data.error || 'Failed to add staff', 'error')
+        return
+      }
+      const data = await res.json()
+      const id = `STF-${String(staffUsers.length + 1).padStart(3, '0')}`
+      setStaffUsers([...staffUsers, { ...(newStaff as StaffUser), id }])
+      setShowAddStaff(false)
+      setNewStaff({ role: 'staff', status: 'Active', department: 'Operations' })
+      showToast(`Staff added. Temporary password: ${data.tempPassword}`, 'success')
+    } catch {
+      showToast('Network error. Please try again.', 'error')
+    }
   }
 
   // If not logged in, render the clean Staff Login Gate
@@ -1550,51 +1570,55 @@ export function AdminPortal({
       )}
 
       {showAddStaff && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-extrabold">Add New Staff</h3>
+              <h3 className="text-lg font-extrabold text-gray-900">Add New Staff</h3>
               <button onClick={() => setShowAddStaff(false)} className="text-muted hover:text-ink">
                 <Icon name="close" className="size-4" />
               </button>
             </div>
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold mb-1">Full Name</label>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Full Name</label>
                 <input
                   value={newStaff.name || ''}
                   onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold mb-1">Email</label>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Email</label>
                 <input
                   type="email"
                   value={newStaff.email || ''}
                   onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
-                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold mb-1">Role</label>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Role</label>
                 <select
                   value={newStaff.role}
                   onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value as AdminRole })}
-                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
                 >
-                  <option value="staff">Staff</option>
+                  <option value="staff">Staff (Call Centre)</option>
                   <option value="field">Field Crew</option>
                   <option value="operations">Operations</option>
                   <option value="admin">Admin HQ</option>
+                  <option value="regional_coordinator">Regional Coordinator</option>
+                  <option value="regional_manager">Regional Manager</option>
+                  <option value="hq_admin">HQ Admin</option>
+                  <option value="system_admin">System Admin</option>
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-bold mb-1">Department</label>
+                <label className="block text-xs font-bold mb-1 text-gray-700">Department</label>
                 <input
                   value={newStaff.department || ''}
                   onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
-                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-900"
                 />
               </div>
               <div className="flex gap-2 pt-2">

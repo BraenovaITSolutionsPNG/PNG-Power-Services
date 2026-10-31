@@ -1,0 +1,115 @@
+showAddStaff && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold">Add New Staff</h3>
+              <button onClick={() => setShowAddStaff(false)} className="text-muted hover:text-ink">
+                <Icon name="close" className="size-4" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold mb-1">Full Name</label>
+                <input
+                  value={newStaff.name || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Email</label>
+                <input
+                  type="email"
+                  value={newStaff.email || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Role</label>
+                <select
+                  value={newStaff.role}
+                  onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value as AdminRole })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                >
+                  <option value="staff">Staff</option>
+                  <option value="field">Field Crew</option>
+                  <option value="operations">Operations</option>
+                  <option value="admin">Admin HQ</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Department</label>
+                <input
+                  value={newStaff.department || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button onClick={handleAddStaff} className="button button-primary flex-1">Add Staff</button>
+                <button onClick={() => setShowAddStaff(false)} className="button button-secondary flex-1">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {toast && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top-4">
+          <div className={`flex items-center gap-3 rounded-xl px-5 py-3 shadow-2xl border ${
+            toast.type === 'success' ? 'bg-success-soft border-success/30 text-success-dark' :
+            toast.type === 'error' ? 'bg-brand-soft border-brand/30 text-brand-dark' :
+            'bg-blue-soft border-blue/30 text-blue-dark'
+          }`}>
+            <Icon name={toast.type === 'success' ? 'check' : toast.type === 'error' ? 'alert' : 'info'} className="size-5" />
+            <span className="text-sm font-semibold">{toast.message}</span>
+            <button onClick={() => setToast(null)} className="ml-2 opacity-60 hover:opacity-100">
+              <Icon name="close" className="size-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showNoteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold">Add Log Note - {noteJobId}</h3>
+              <button onClick={() => setShowNoteModal(false)} className="text-muted hover:text-ink">
+                <Icon name="close" className="size-4" />
+              </button>
+            </div>
+            <textarea
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              placeholder="Enter your field notes here..."
+              className="w-full min-h-32 rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm resize-y"
+              autoFocus
+            />
+            <div className="flex gap-2 pt-4">
+              <button
+                onClick={() => {
+                  if (noteText.trim()) {
+                    showToast(`Log note added to ${noteJobId}: ${noteText}`, 'success')
+                    setShowNoteModal(false)
+                    setNoteText('')
+                  }
+                }}
+                className="button button-primary flex-1"
+              >
+                Save Note
+              </button>
+              <button
+                onClick={() => {
+                  setShowNoteModal(false)
+                  setNoteText('')
+                }}
+                className="button button-secondary flex-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
