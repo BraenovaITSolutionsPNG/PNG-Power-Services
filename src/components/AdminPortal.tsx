@@ -113,6 +113,14 @@ export function AdminPortal({
   const [filter, setFilter] = useState('All incidents')
   const [selectedJob, setSelectedJob] = useState<string | null>(null)
 
+  // Field crew note modal state
+  const [showNoteModal, setShowNoteModal] = useState(false)
+  const [noteText, setNoteText] = useState('')
+  const [noteJobId, setNoteJobId] = useState<string | null>(null)
+
+  // Track restored work orders for toggle
+  const [restoredJobs, setRestoredJobs] = useState<Set<string>>(new Set())
+
   const [fieldJobs, setFieldJobs] = useState<WorkOrder[]>([
     {
       id: 'WO-8842',
@@ -756,27 +764,45 @@ export function AdminPortal({
                             <div className="flex flex-wrap gap-2">
                               <button
                                 onClick={() => {
-                                  const note = prompt('Enter log note:')
-                                  if (note) alert(`Log note added to ${job.id}: ${note}`)
+                                  setNoteJobId(job.id)
+                                  setNoteText('')
+                                  setShowNoteModal(true)
                                 }}
                                 className="button button-secondary text-xs"
                               >
                                 <Icon name="document" className="size-3.5" /> Add Log Note
                               </button>
-                              <button
-                                onClick={() => alert(`Opening camera for site photo at ${job.place}`)}
-                                className="button button-secondary text-xs"
-                              >
-                                <Icon name="plus" className="size-3.5" /> Take Site Photo
-                              </button>
+                              <label className="button button-secondary text-xs cursor-pointer">
+                                <Icon name="plus" className="size-3.5" /> Upload Picture
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0]
+                                    if (file) alert(`Picture "${file.name}" uploaded for ${job.id}`)
+                                  }}
+                                />
+                              </label>
                               <button
                                 onClick={() => {
-                                  alert(`Work order ${job.id} marked as Restored/Completed!`)
-                                  setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
+                                  setRestoredJobs((prev) => {
+                                    const next = new Set(prev)
+                                    if (next.has(job.id)) {
+                                      next.delete(job.id)
+                                      setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'In progress' } : j))
+                                      alert(`Work order ${job.id} restoration cancelled. Status reverted.`)
+                                    } else {
+                                      next.add(job.id)
+                                      setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
+                                      alert(`Work order ${job.id} marked as Restored/Completed successfully!`)
+                                    }
+                                    return next
+                                  })
                                 }}
-                                className="button button-primary text-xs bg-success hover:bg-success-dark"
+                                className={`button text-xs ${restoredJobs.has(job.id) ? 'bg-brand/20 text-brand border border-brand/40 hover:bg-brand/30' : 'button-primary bg-success hover:bg-success-dark'}`}
                               >
-                                <Icon name="check" className="size-3.5" /> Mark Restored
+                                <Icon name="check" className="size-3.5" /> {restoredJobs.has(job.id) ? 'Cancel Restore' : 'Mark Restored'}
                               </button>
                             </div>
                             <p className="text-[0.7rem] text-muted flex items-center gap-1.5">
@@ -1202,6 +1228,49 @@ export function AdminPortal({
                 <button onClick={handleAddStaff} className="button button-primary flex-1">Add Staff</button>
                 <button onClick={() => setShowAddStaff(false)} className="button button-secondary flex-1">Cancel</button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showNoteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold">Add Log Note - {noteJobId}</h3>
+              <button onClick={() => setShowNoteModal(false)} className="text-muted hover:text-ink">
+                <Icon name="close" className="size-4" />
+              </button>
+            </div>
+            <textarea
+              value={noteText}
+              onChange={(e) => setNoteText(e.target.value)}
+              placeholder="Enter your field notes here..."
+              className="w-full min-h-32 rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm resize-y"
+              autoFocus
+            />
+            <div className="flex gap-2 pt-4">
+              <button
+                onClick={() => {
+                  if (noteText.trim()) {
+                    alert(`Log note added to ${noteJobId}: ${noteText}`)
+                    setShowNoteModal(false)
+                    setNoteText('')
+                  }
+                }}
+                className="button button-primary flex-1"
+              >
+                Save Note
+              </button>
+              <button
+                onClick={() => {
+                  setShowNoteModal(false)
+                  setNoteText('')
+                }}
+                className="button button-secondary flex-1"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

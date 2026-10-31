@@ -1,0 +1,33 @@
+ p-5 rounded-b-xl space-y-3">
+                            <p className="text-xs font-bold text-ink">Field Actions & Logs</p>
+                            <div className="flex flex-wrap gap-2">
+                              <button
+                                onClick={() => {
+                                  const note = prompt('Enter log note:')
+                                  if (note) alert(`Log note added to ${job.id}: ${note}`)
+                                }}
+                                className="button button-secondary text-xs"
+                              >
+                                <Icon name="document" className="size-3.5" /> Add Log Note
+                              </button>
+                              <button
+                                onClick={() => alert(`Opening camera for site photo at ${job.place}`)}
+                                className="button button-secondary text-xs"
+                              >
+                                <Icon name="plus" className="size-3.5" /> Take Site Photo
+                              </button>
+                              <button
+                                onClick={() => {
+                                  alert(`Work order ${job.id} marked as Restored/Completed!`)
+                                  setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
+                                }}
+                                className="button button-primary text-xs bg-success hover:bg-success-dark"
+                              >
+                                <Icon name="check" className="size-3.5" /> Mark Restored
+                              </button>
+                            </div>
+                            <p className="text-[0.7rem] text-muted flex items-center gap-1.5">
+                              <Icon name="shield" className="size-3.5 text-warning" />
+                              Ensure site voltage test is zero before handling lines or transformers.
+                            </p>
+                          </div>
