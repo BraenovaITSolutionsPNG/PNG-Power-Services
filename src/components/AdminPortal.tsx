@@ -259,6 +259,19 @@ export function AdminPortal({
     }
   }
 
+  function createWorkOrder(report: any) {
+    const woId = 'WO-' + Math.random().toString(36).substring(2, 6).toUpperCase()
+    setFieldJobs([...fieldJobs, {
+      id: woId,
+      title: report.issueType,
+      place: report.location + ' (' + report.province + ')',
+      priority: 'Normal',
+      time: 'Just assigned',
+      status: 'Assigned',
+    }])
+    showToast('Work order ' + woId + ' created for ' + report.caseNumber, 'success')
+  }
+
   // If not logged in, render the clean Staff Login Gate
   if (!isAuthenticated) {
     return (
@@ -1439,9 +1452,9 @@ export function AdminPortal({
                           {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone}</p>}
                         </div>
                         <div className="flex flex-wrap gap-2 shrink-0">
-                          <button onClick={() => showToast(`Report ${report.caseNumber} linked to incident INC-2048`, 'success')} className="button button-primary text-xs">Link to Incident</button>
-                          <button onClick={() => showToast(`Work order created for ${report.caseNumber}`, 'success')} className="button button-secondary text-xs">Create Work Order</button>
-                          <button onClick={() => showToast(`${report.caseNumber} marked as duplicate`, 'info')} className="button button-secondary text-xs">Mark Duplicate</button>
+                          <button onClick={() => { onUpdateReportStatus?.(report.caseNumber, 'Crew assigned'); showToast('Report ' + report.caseNumber + ' linked to incident', 'success') }} className="button button-primary text-xs">Link to Incident</button>
+                          <button onClick={() => createWorkOrder(report)} className="button button-secondary text-xs">Create Work Order</button>
+                          <button onClick={() => showToast(report.caseNumber + ' marked as duplicate', 'info')} className="button button-secondary text-xs">Mark Duplicate</button>
                         </div>
                       </div>
                     </div>
@@ -1604,18 +1617,24 @@ export function AdminPortal({
               {/* Overdue Reviews */}
               <div className="card p-6">
                 <h3 className="font-extrabold text-base mb-3">Overdue Reviews</h3>
+                <p className="text-xs text-muted mb-3">Reports that have been under review for too long and need attention</p>
                 <div className="space-y-2">
-                  {publicReports.filter(r => r.status === 'Under review').slice(0, 3).map((r) => (
-                    <div key={r.caseNumber} className="flex items-center justify-between py-2 border-b border-line last:border-0">
+                  {publicReports.filter(r => r.status === 'Under review').slice(0, 5).map((r) => (
+                    <div key={r.caseNumber} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-2 border-b border-line last:border-0">
                       <div>
                         <p className="text-xs font-bold text-ink">{r.caseNumber}</p>
-                        <p className="text-[0.7rem] text-muted">{r.issueType}  -  {r.location}</p>
+                        <p className="text-[0.7rem] text-muted">{r.issueType} - {r.location}</p>
                       </div>
-                      <span className="badge badge-red">Overdue</span>
+                      <div className="flex items-center gap-2">
+                        <span className="badge badge-red">Overdue</span>
+                        <button onClick={() => { onUpdateReportStatus?.(r.caseNumber, 'Crew assigned'); showToast(`${r.caseNumber} reviewed and assigned`, 'success') }} className="button button-primary text-xs">Review Now</button>
+                        <button onClick={() => showToast(`${r.caseNumber} escalated to regional manager`, 'info')} className="button button-secondary text-xs">Escalate</button>
+                        <button onClick={() => showToast(`${r.caseNumber} dismissed from overdue list`, 'info')} className="button button-secondary text-xs">Dismiss</button>
+                      </div>
                     </div>
                   ))}
                   {publicReports.filter(r => r.status === 'Under review').length === 0 && (
-                    <p className="text-xs text-muted">No overdue reviews.</p>
+                    <p className="text-xs text-muted">No overdue reviews. All reports are being processed.</p>
                   )}
                 </div>
               </div>

@@ -1,0 +1,22 @@
+{/* Overdue Reviews */}
+              <div className="card p-6">
+                <h3 className="font-extrabold text-base mb-3">Overdue Reviews</h3>
+                <div className="space-y-2">
+                  {publicReports.filter(r => r.status === 'Under review').slice(0, 3).map((r) => (
+                    <div key={r.caseNumber} className="flex items-center justify-between py-2 border-b border-line last:border-0">
+                      <div>
+                        <p className="text-xs font-bold text-ink">{r.caseNumber}</p>
+                        <p className="text-[0.7rem] text-muted">{r.issueType}  -  {r.location}</p>
+                      </div>
+                      <span className="badge badge-red">Overdue</span>
+                    </div>
+                  ))}
+                  {publicReports.filter(r => r.status === 'Under review').length === 0 && (
+                    <p className="text-xs text-muted">No overdue reviews.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          
