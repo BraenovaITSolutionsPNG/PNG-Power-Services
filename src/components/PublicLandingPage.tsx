@@ -132,12 +132,12 @@ export function PublicLandingPage({
       {/* Top Banner / Emergency Alert Strip */}
       <div className="bg-sidebar px-4 py-2 text-xs text-white/80">
         <div className="page-wrap flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <span className="flex size-2 rounded-full bg-success animate-pulse" />
             <span className="font-semibold text-white">National Power Grid Status:</span>
             <span className="text-white/70">Port Moresby & Ramu systems operating normally</span>
           </div>
-          <div className="flex items-center gap-4 text-xs">
+          <div className="hidden sm:flex items-center gap-4 text-xs">
             <a
               href="tel:70908000"
               className="flex items-center gap-1.5 font-bold text-brand-light hover:underline"
