@@ -118,6 +118,13 @@ export function AdminPortal({
   const [noteText, setNoteText] = useState('')
   const [noteJobId, setNoteJobId] = useState<string | null>(null)
 
+  // Toast notification state
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null)
+  function showToast(message: string, type: 'success' | 'info' | 'error' = 'success') {
+    setToast({ message, type })
+    setTimeout(() => setToast(null), 3500)
+  }
+
   // Track restored work orders for toggle
   const [restoredJobs, setRestoredJobs] = useState<Set<string>>(new Set())
 
@@ -780,7 +787,7 @@ export function AdminPortal({
                                   className="hidden"
                                   onChange={(e) => {
                                     const file = e.target.files?.[0]
-                                    if (file) alert(`Picture "${file.name}" uploaded for ${job.id}`)
+                                    if (file) showToast(`Picture "${file.name}" uploaded for ${job.id}`, 'success')
                                   }}
                                 />
                               </label>
@@ -791,11 +798,11 @@ export function AdminPortal({
                                     if (next.has(job.id)) {
                                       next.delete(job.id)
                                       setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'In progress' } : j))
-                                      alert(`Work order ${job.id} restoration cancelled. Status reverted.`)
+                                      showToast(`Work order ${job.id} restoration cancelled. Status reverted.`, 'info')
                                     } else {
                                       next.add(job.id)
                                       setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
-                                      alert(`Work order ${job.id} marked as Restored/Completed successfully!`)
+                                      showToast(`Work order ${job.id} marked as Restored/Completed successfully!`, 'success')
                                     }
                                     return next
                                   })
@@ -1233,6 +1240,22 @@ export function AdminPortal({
         </div>
       )}
 
+      {toast && (
+        <div className="fixed top-6 right-6 z-50 animate-in fade-in slide-in-from-top-4">
+          <div className={`flex items-center gap-3 rounded-xl px-5 py-3 shadow-2xl border ${
+            toast.type === 'success' ? 'bg-success-soft border-success/30 text-success-dark' :
+            toast.type === 'error' ? 'bg-brand-soft border-brand/30 text-brand-dark' :
+            'bg-blue-soft border-blue/30 text-blue-dark'
+          }`}>
+            <Icon name={toast.type === 'success' ? 'check' : toast.type === 'error' ? 'alert' : 'info'} className="size-5" />
+            <span className="text-sm font-semibold">{toast.message}</span>
+            <button onClick={() => setToast(null)} className="ml-2 opacity-60 hover:opacity-100">
+              <Icon name="close" className="size-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
       {showNoteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
@@ -1253,7 +1276,7 @@ export function AdminPortal({
               <button
                 onClick={() => {
                   if (noteText.trim()) {
-                    alert(`Log note added to ${noteJobId}: ${noteText}`)
+                    showToast(`Log note added to ${noteJobId}: ${noteText}`, 'success')
                     setShowNoteModal(false)
                     setNoteText('')
                   }
