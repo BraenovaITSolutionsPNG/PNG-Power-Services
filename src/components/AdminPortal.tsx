@@ -20,7 +20,7 @@ export function AdminPortal({
 
   // Auth inputs
   const [username, setUsername] = useState('ops.lead@pngpower.com.pg')
-  const [password, setPassword] = useState('••••••••••••')
+  const [password, setPassword] = useState('')
   const [authError, setAuthError] = useState('')
 
   // Staff management
@@ -139,40 +139,65 @@ export function AdminPortal({
     },
   ])
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
     if (!username.trim()) {
       setAuthError('Please enter your staff ID or email')
       return
     }
-    const foundUser = staffUsers.find(u => u.email === username)
-    if (foundUser) {
-      setRole(foundUser.role)
-      if (foundUser.role === 'operations') setActiveSection('operations-overview')
-      else if (foundUser.role === 'field') setActiveSection('field-assignments')
-      else if (foundUser.role === 'admin') setActiveSection('admin-system')
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: username, password }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setAuthError(data.error || 'Login failed')
+        return
+      }
+      const user = await res.json()
+      setRole(user.role as AdminRole)
+      setUsername(user.email)
+      if (user.role === 'operations') setActiveSection('operations-overview')
+      else if (user.role === 'field') setActiveSection('field-assignments')
+      else if (user.role === 'admin') setActiveSection('admin-system')
       else setActiveSection('operations-overview')
+      setIsAuthenticated(true)
+      setAuthError('')
+    } catch {
+      setAuthError('Network error. Please try again.')
     }
-    setIsAuthenticated(true)
-    setAuthError('')
   }
 
-  function handleQuickLogin(targetRole: AdminRole) {
-    setRole(targetRole)
-    if (targetRole === 'operations') {
-      setUsername('ops.lead@pngpower.com.pg')
-      setActiveSection('operations-overview')
-    } else if (targetRole === 'field') {
-      setUsername('crew.delta@pngpower.com.pg')
-      setActiveSection('field-assignments')
-    } else if (targetRole === 'admin') {
-      setUsername('admin.hq@pngpower.com.pg')
-      setActiveSection('admin-system')
-    } else {
-      setUsername('dispatch.ncd@pngpower.com.pg')
-      setActiveSection('operations-overview')
+  async function handleQuickLogin(targetRole: AdminRole) {
+    const creds: Record<string, { email: string; password: string }> = {
+      operations: { email: 'ops.lead@pngpower.com.pg', password: 'ops123' },
+      field: { email: 'crew.delta@pngpower.com.pg', password: 'field123' },
+      admin: { email: 'admin.hq@pngpower.com.pg', password: 'admin123' },
+      staff: { email: 'dispatch.ncd@pngpower.com.pg', password: 'dispatch123' },
     }
-    setIsAuthenticated(true)
+    const cred = creds[targetRole] || creds.staff
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cred),
+      })
+      if (!res.ok) return
+      const user = await res.json()
+      setRole(user.role as AdminRole)
+      setUsername(user.email)
+      if (user.role === 'operations') setActiveSection('operations-overview')
+      else if (user.role === 'field') setActiveSection('field-assignments')
+      else if (user.role === 'admin') setActiveSection('admin-system')
+      else setActiveSection('operations-overview')
+      setIsAuthenticated(true)
+    } catch {
+      // fallback
+      setRole(targetRole)
+      setIsAuthenticated(true)
+    }
   }
 
   function handleAddStaff() {
@@ -1025,4 +1050,6 @@ export function AdminPortal({
     </div>
   )
 }
+
+
 

@@ -1,7 +1,8 @@
-﻿import express from 'express'
+import express from 'express'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import bcrypt from 'bcrypt'
 
 dotenv.config()
 
@@ -30,6 +31,37 @@ app.get('/api/health', async (req, res) => {
   }
 })
 
+// Auth
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+    const [rows] = await pool.query('SELECT id, name, email, password_hash, role, department, status FROM users WHERE email = ?', [email])
+    if (rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' })
+    }
+    const user = rows[0]
+    if (user.status !== 'Active') {
+      return res.status(403).json({ error: 'Account is inactive' })
+    }
+    const valid = await bcrypt.compare(password, user.password_hash)
+    if (!valid) {
+      return res.status(401).json({ error: 'Invalid credentials' })
+    }
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      department: user.department,
+      token: Buffer.from(JSON.stringify({ id: user.id, role: user.role })).toString('base64')
+    })
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
+})
 // Reports
 app.get('/api/reports', async (req, res) => {
   try {
@@ -121,3 +153,4 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+

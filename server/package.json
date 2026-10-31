@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "png-power-server",
   "version": "1.0.0",
   "type": "module",
@@ -7,9 +7,10 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "mysql2": "^3.11.0",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.0"
+    "dotenv": "^16.4.0",
+    "express": "^4.21.0",
+    "mysql2": "^3.11.0"
   }
 }
