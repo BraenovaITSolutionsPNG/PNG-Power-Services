@@ -1,4 +1,4 @@
-export type AdminRole = 'operations' | 'field' | 'admin' | 'staff'
+export type AdminRole = 'operations' | 'field' | 'admin' | 'staff' | 'regional_coordinator' | 'regional_manager' | 'hq_admin' | 'system_admin'
 
 export interface StaffUser {
   id: string
