@@ -1,0 +1,42 @@
+role === 'hq_admin' && (
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-2xl font-extrabold tracking-tight">HQ Configuration</h1>
+                <p className="text-xs text-muted mt-1">Manage reference data, access, and national trends</p>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="card p-5">
+                  <span className="icon-tile metric-blue"><Icon name="user" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Active Users</p>
+                </div>
+                <div className="card p-5">
+                  <span className="icon-tile metric-green"><Icon name="document" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Reference Data Items</p>
+                </div>
+                <div className="card p-5">
+                  <span className="icon-tile metric-amber"><Icon name="signal" /></span>
+                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-1 text-xs font-medium text-muted">National Trends</p>
+                </div>
+              </div>
+              <div className="card p-6">
+                <h3 className="font-extrabold text-base mb-3">Configuration</h3>
+                <div className="flex flex-wrap gap-3">
+                  <button className="button button-secondary text-xs">
+                    <Icon name="info" className="size-3.5" /> Manage Issue Categories
+                  </button>
+                  <button className="button button-secondary text-xs">
+                    <Icon name="map" className="size-3.5" /> Manage Regions
+                  </button>
+                  <button className="button button-secondary text-xs">
+                    <Icon name="team" className="size-3.5" /> Manage Teams
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* System Admin View */}
+          {

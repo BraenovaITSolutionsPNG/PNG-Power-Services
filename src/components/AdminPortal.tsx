@@ -1292,9 +1292,32 @@ export function AdminPortal({
                   <p className="mt-1 text-xs font-medium text-muted">Overdue Reviews</p>
                 </div>
               </div>
-              <div className="card p-6">
-                <h3 className="font-extrabold text-base mb-3">Pending Actions</h3>
-                <p className="text-sm text-muted">Review suggested report-to-incident links and confirm or correct groupings.</p>
+              <div className="card overflow-hidden">
+                <div className="flex items-center justify-between border-b border-line p-5 bg-surface-raised/40">
+                  <h3 className="font-extrabold text-base">Triage Queue</h3>
+                  <span className="badge badge-blue">{publicReports.filter(r => r.status === 'Under review').length} pending</span>
+                </div>
+                <div className="divide-y divide-line">
+                  {publicReports.filter(r => r.status === 'Under review').map((report) => (
+                    <div key={report.caseNumber} className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
+                          <span className="badge badge-amber">{report.issueType}</span>
+                        </div>
+                        <p className="text-xs text-muted mt-1">{report.location} ({report.province})</p>
+                        <p className="text-xs text-muted mt-0.5">{report.description}</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <button onClick={() => showToast(`Report ${report.caseNumber} assigned to incident`, 'success')} className="button button-primary text-xs">Link to Incident</button>
+                        <button onClick={() => showToast(`Work order created for ${report.caseNumber}`, 'success')} className="button button-secondary text-xs">Create Work Order</button>
+                      </div>
+                    </div>
+                  ))}
+                  {publicReports.filter(r => r.status === 'Under review').length === 0 && (
+                    <div className="p-8 text-center text-sm text-muted">No reports pending triage.</div>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -1314,18 +1337,18 @@ export function AdminPortal({
                 </div>
                 <div className="card p-5">
                   <span className="icon-tile metric-green"><Icon name="check" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-4 text-3xl font-extrabold">{publicReports.filter(r => r.status === 'Resolved').length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Resolved</p>
                 </div>
                 <div className="card p-5">
                   <span className="icon-tile metric-amber"><Icon name="clock" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
-                  <p className="mt-1 text-xs font-medium text-muted">Overdue</p>
+                  <p className="mt-4 text-3xl font-extrabold">{publicReports.filter(r => r.status !== 'Resolved').length}</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Open / Pending</p>
                 </div>
                 <div className="card p-5">
                   <span className="icon-tile metric-red"><Icon name="alert" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
-                  <p className="mt-1 text-xs font-medium text-muted">Recurring Issues</p>
+                  <p className="mt-4 text-3xl font-extrabold">{incidentsList.filter(i => i.priority === 'Critical' || i.priority === 'High').length}</p>
+                  <p className="mt-1 text-xs font-medium text-muted">High Priority Incidents</p>
                 </div>
               </div>
             </div>
@@ -1341,30 +1364,30 @@ export function AdminPortal({
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 <div className="card p-5">
                   <span className="icon-tile metric-blue"><Icon name="user" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
+                  <p className="mt-4 text-3xl font-extrabold">{staffUsers.length}</p>
                   <p className="mt-1 text-xs font-medium text-muted">Active Users</p>
                 </div>
                 <div className="card p-5">
                   <span className="icon-tile metric-green"><Icon name="document" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
-                  <p className="mt-1 text-xs font-medium text-muted">Reference Data Items</p>
+                  <p className="mt-4 text-3xl font-extrabold">{publicReports.length + incidentsList.length}</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Total Reports & Incidents</p>
                 </div>
                 <div className="card p-5">
                   <span className="icon-tile metric-amber"><Icon name="signal" /></span>
-                  <p className="mt-4 text-3xl font-extrabold">0</p>
-                  <p className="mt-1 text-xs font-medium text-muted">National Trends</p>
+                  <p className="mt-4 text-3xl font-extrabold">{publicReports.filter(r => r.status === 'Resolved').length}</p>
+                  <p className="mt-1 text-xs font-medium text-muted">Resolved Cases</p>
                 </div>
               </div>
               <div className="card p-6">
                 <h3 className="font-extrabold text-base mb-3">Configuration</h3>
                 <div className="flex flex-wrap gap-3">
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('Issue categories management opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="info" className="size-3.5" /> Manage Issue Categories
                   </button>
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('Regions management opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="map" className="size-3.5" /> Manage Regions
                   </button>
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('Teams management opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="team" className="size-3.5" /> Manage Teams
                   </button>
                 </div>
@@ -1404,13 +1427,13 @@ export function AdminPortal({
               <div className="card p-6">
                 <h3 className="font-extrabold text-base mb-3">System Actions</h3>
                 <div className="flex flex-wrap gap-3">
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('System logs opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="info" className="size-3.5" /> View Logs
                   </button>
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('Access management opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="lock" className="size-3.5" /> Manage Access
                   </button>
-                  <button className="button button-secondary text-xs">
+                  <button onClick={() => showToast('System configuration opened', 'info')} className="button button-secondary text-xs">
                     <Icon name="info" className="size-3.5" /> Configuration
                   </button>
                 </div>
