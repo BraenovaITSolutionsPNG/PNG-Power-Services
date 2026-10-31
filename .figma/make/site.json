@@ -1,5 +1,9 @@
 {
+  "title": "PNG Power Services",
   "description": "Provides a user-friendly frontend based on the PDF’s content, helping visitors quickly find the information and resources they need.",
+  "icons": {
+    "icon": "/png-power-logo.png"
+  },
   "robots": {
     "index": false
   },
