@@ -412,7 +412,7 @@ export function AdminPortal({
             {role === 'operations' && (
               <>
                 <button
-                  onClick={() => setActiveSection('operations-overview')}
+                  onClick={() => { setActiveSection('operations-overview'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'operations-overview' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -420,7 +420,7 @@ export function AdminPortal({
                   <Icon name="home" className="size-3.5" /> Operations Overview
                 </button>
                 <button
-                  onClick={() => setActiveSection('public-intake')}
+                  onClick={() => { setActiveSection('public-intake'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'public-intake' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -428,7 +428,7 @@ export function AdminPortal({
                   <Icon name="document" className="size-3.5" /> Public Fault Intake ({publicReports.length})
                 </button>
                 <button
-                  onClick={() => setActiveSection('incidents')}
+                  onClick={() => { setActiveSection('incidents'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'incidents' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -441,7 +441,7 @@ export function AdminPortal({
             {role === 'field' && (
               <>
                 <button
-                  onClick={() => setActiveSection('field-assignments')}
+                  onClick={() => { setActiveSection('field-assignments'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'field-assignments' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -449,7 +449,7 @@ export function AdminPortal({
                   <Icon name="wrench" className="size-3.5" /> My Work Orders
                 </button>
                 <button
-                  onClick={() => setActiveSection('field-safety')}
+                  onClick={() => { setActiveSection('field-safety'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'field-safety' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -462,7 +462,7 @@ export function AdminPortal({
             {role === 'admin' && (
               <>
                 <button
-                  onClick={() => setActiveSection('admin-system')}
+                  onClick={() => { setActiveSection('admin-system'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'admin-system' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -470,7 +470,7 @@ export function AdminPortal({
                   <Icon name="shield" className="size-3.5" /> System Health
                 </button>
                 <button
-                  onClick={() => setActiveSection('admin-users')}
+                  onClick={() => { setActiveSection('admin-users'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'admin-users' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -483,7 +483,7 @@ export function AdminPortal({
             {role === 'staff' && (
               <>
                 <button
-                  onClick={() => setActiveSection('call-centre')}
+                  onClick={() => { setActiveSection('call-centre'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'call-centre' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -496,7 +496,7 @@ export function AdminPortal({
             {role === 'regional_coordinator' && (
               <>
                 <button
-                  onClick={() => setActiveSection('regional-triage')}
+                  onClick={() => { setActiveSection('regional-triage'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'regional-triage' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -509,7 +509,7 @@ export function AdminPortal({
             {role === 'regional_manager' && (
               <>
                 <button
-                  onClick={() => setActiveSection('regional-performance')}
+                  onClick={() => { setActiveSection('regional-performance'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'regional-performance' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -522,7 +522,7 @@ export function AdminPortal({
             {role === 'hq_admin' && (
               <>
                 <button
-                  onClick={() => setActiveSection('hq-config')}
+                  onClick={() => { setActiveSection('hq-config'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'hq-config' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -535,7 +535,7 @@ export function AdminPortal({
             {role === 'system_admin' && (
               <>
                 <button
-                  onClick={() => setActiveSection('system-health')}
+                  onClick={() => { setActiveSection('system-health'); setMobileOpen(false) }}
                   className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-xs font-semibold ${
                     activeSection === 'system-health' ? 'bg-white/10 text-white' : 'text-white/50 hover:bg-white/5'
                   }`}
@@ -1965,7 +1965,7 @@ export function AdminPortal({
 
       {showAddStaff && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Add New Staff</h3>
               <button onClick={() => setShowAddStaff(false)} className="text-muted hover:text-ink">
@@ -2042,7 +2042,7 @@ export function AdminPortal({
 
       {showNoteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold">Add Log Note - {noteJobId}</h3>
               <button onClick={() => setShowNoteModal(false)} className="text-muted hover:text-ink">
@@ -2086,7 +2086,7 @@ export function AdminPortal({
       {/* Issue Categories Modal */}
       {showCategoryModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Manage Issue Categories</h3>
               <button onClick={() => setShowCategoryModal(false)} className="text-gray-500 hover:text-gray-900">
@@ -2132,7 +2132,7 @@ export function AdminPortal({
       {/* Manage Regions Modal */}
       {showRegionModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Manage Regions</h3>
               <button onClick={() => setShowRegionModal(false)} className="text-gray-500 hover:text-gray-900">
@@ -2185,7 +2185,7 @@ export function AdminPortal({
       {/* Manage Teams Modal */}
       {showTeamModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Manage Teams</h3>
               <button onClick={() => setShowTeamModal(false)} className="text-gray-500 hover:text-gray-900">
@@ -2243,7 +2243,7 @@ export function AdminPortal({
       {/* Edit Access Modal */}
       {showEditAccessModal && editAccessUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-md rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Edit Access - {editAccessUser.name}</h3>
               <button onClick={() => setShowEditAccessModal(false)} className="text-gray-500 hover:text-gray-900">
@@ -2308,7 +2308,7 @@ export function AdminPortal({
       {/* View Logs Modal */}
       {showLogsModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-2xl rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">System Logs</h3>
               <div className="flex items-center gap-2">
@@ -2353,7 +2353,7 @@ export function AdminPortal({
       {/* Manage Access Modal */}
       {showAccessModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-2xl rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">Manage User Access</h3>
               <button onClick={() => setShowAccessModal(false)} className="text-gray-500 hover:text-gray-900">
@@ -2386,7 +2386,7 @@ export function AdminPortal({
       {/* System Configuration Modal */}
       {showConfigModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6">
+          <div className="w-full max-w-lg rounded-2xl bg-white border border-gray-200 shadow-2xl p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-extrabold text-gray-900">System Configuration</h3>
               <button onClick={() => setShowConfigModal(false)} className="text-gray-500 hover:text-gray-900">
