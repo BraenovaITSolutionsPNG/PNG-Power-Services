@@ -175,40 +175,6 @@ export function AdminPortal({
     }
   }
 
-  async function handleQuickLogin(targetRole: AdminRole) {
-    const creds: Record<string, { email: string; password: string }> = {
-      operations: { email: 'ops.lead@pngpower.com.pg', password: 'ops123' },
-      field: { email: 'crew.delta@pngpower.com.pg', password: 'field123' },
-      admin: { email: 'admin.hq@pngpower.com.pg', password: 'admin123' },
-      staff: { email: 'dispatch.ncd@pngpower.com.pg', password: 'dispatch123' },
-    }
-    const cred = creds[targetRole] || creds.staff
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(cred),
-      })
-      if (!res.ok) return
-      const user = await res.json()
-      setRole(user.role as AdminRole)
-      setUsername(user.email)
-      if (user.role === 'operations') setActiveSection('operations-overview')
-      else if (user.role === 'field') setActiveSection('field-assignments')
-      else if (user.role === 'admin') setActiveSection('admin-system')
-      else setActiveSection('operations-overview')
-      setIsAuthenticated(true)
-      if (user.token) {
-        setAuthToken(user.token)
-        localStorage.setItem('png_power_token', user.token)
-      }
-    } catch {
-      // fallback
-      setRole(targetRole)
-      setIsAuthenticated(true)
-    }
-  }
-
   function handleAddStaff() {
     const id = `STF-${String(staffUsers.length + 1).padStart(3, '0')}`
     setStaffUsers([...staffUsers, { ...(newStaff as StaffUser), id }])
@@ -251,47 +217,6 @@ export function AdminPortal({
                 {authError}
               </div>
             )}
-
-            {/* Quick Demo Sign-in selector */}
-            <div className="mt-6">
-              <p className="text-[0.68rem] font-bold uppercase tracking-wider text-white/50 mb-2">
-                1-Click Quick Demo Sign In
-              </p>
-              <div className="grid grid-cols-4 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('operations')}
-                  className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
-                >
-                  <Icon name="briefcase" className="size-4 mx-auto text-brand-light" />
-                  <span className="block mt-1 text-[0.72rem] font-bold">Operations</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('field')}
-                  className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
-                >
-                  <Icon name="wrench" className="size-4 mx-auto text-warning" />
-                  <span className="block mt-1 text-[0.72rem] font-bold">Field Crew</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('admin')}
-                  className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
-                >
-                  <Icon name="shield" className="size-4 mx-auto text-blue" />
-                  <span className="block mt-1 text-[0.72rem] font-bold">Admin HQ</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('staff' as AdminRole)}
-                  className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
-                >
-                  <Icon name="user" className="size-4 mx-auto text-white/70" />
-                  <span className="block mt-1 text-[0.62rem] font-bold">Staff</span>
-                </button>
-              </div>
-            </div>
 
             <div className="my-5 flex items-center gap-3">
               <div className="h-px flex-1 bg-white/10" />
