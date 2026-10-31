@@ -131,6 +131,9 @@ export function AdminPortal({
   // Track reviewed reports for toggle
   const [reviewedReports, setReviewedReports] = useState<Set<string>>(new Set())
 
+  // Track dispatched reports for toggle
+  const [dispatchedReports, setDispatchedReports] = useState<Set<string>>(new Set())
+
   // Call Centre state
   const [ccCallerName, setCcCallerName] = useState('')
   const [ccCallerPhone, setCcCallerPhone] = useState('')
@@ -648,10 +651,24 @@ export function AdminPortal({
 
                       <div className="flex items-center gap-2 self-start sm:self-auto">
                         <button
-                          onClick={() => showToast(`Dispatch crew assigned to Case ${report.caseNumber}`, 'success')}
-                          className="button button-primary text-xs"
+                          onClick={() => {
+                            setDispatchedReports((prev) => {
+                              const next = new Set(prev)
+                              if (next.has(report.caseNumber)) {
+                                next.delete(report.caseNumber)
+                                onUpdateReportStatus?.(report.caseNumber, 'Under review')
+                                showToast(`Dispatch cancelled for ${report.caseNumber}`, 'info')
+                              } else {
+                                next.add(report.caseNumber)
+                                onUpdateReportStatus?.(report.caseNumber, 'Crew assigned')
+                                showToast(`Dispatch crew assigned to Case ${report.caseNumber}`, 'success')
+                              }
+                              return next
+                            })
+                          }}
+                          className={`button text-xs ${dispatchedReports.has(report.caseNumber) ? 'bg-brand/20 text-brand border border-brand/40 hover:bg-brand/30' : 'button-primary'}`}
                         >
-                          Dispatch Crew
+                          {dispatchedReports.has(report.caseNumber) ? 'Cancel Dispatch' : 'Dispatch Crew'}
                         </button>
                         <button
                           onClick={() => {
