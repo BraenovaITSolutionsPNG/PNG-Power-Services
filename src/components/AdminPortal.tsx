@@ -533,6 +533,8 @@ export function AdminPortal({
           {/* Operations View */}
           {role === 'operations' && (
             <div className="space-y-8">
+              {activeSection === 'operations-overview' && (
+                <>
               {/* Header metrics */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
@@ -649,7 +651,72 @@ export function AdminPortal({
                 </div>
               </div>
 
-              {/* Active Feeder Incidents */}
+              {activeSection === 'incidents' && (
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight">Active Incidents</h1>
+                    <p className="text-xs text-muted mt-1">Major grid and feeder incidents</p>
+                  </div>
+                  <div className="card overflow-hidden">
+                    <div className="divide-y divide-line">
+                      {incidentsList.map((incident) => (
+                        <div key={incident.id} className="p-5">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-muted">{incident.id}</span>
+                                <span className={`badge ${incident.priority === 'Critical' ? 'badge-red' : incident.priority === 'High' ? 'badge-amber' : 'badge-blue'}`}>{incident.priority}</span>
+                              </div>
+                              <p className="font-bold text-sm mt-1">{incident.title}</p>
+                              <p className="text-xs text-muted">{incident.meta} · {incident.time}</p>
+                            </div>
+                            <span className="text-xs font-bold text-brand-dark bg-brand-soft px-2.5 py-1 rounded-full">{incident.status}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight">Public Fault Intake</h1>
+                    <p className="text-xs text-muted mt-1">All reports submitted through the public website</p>
+                  </div>
+                  <div className="card overflow-hidden">
+                    <div className="flex items-center justify-between border-b border-line p-5 bg-surface-raised/40">
+                      <div>
+                        <h2 className="text-base font-extrabold">All Public Submissions</h2>
+                        <p className="text-xs text-muted mt-0.5">{publicReports.length} reports</p>
+                      </div>
+                    </div>
+                    <div className="divide-y divide-line">
+                      {publicReports.map((report) => (
+                        <div key={report.caseNumber} className="p-5">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">{report.caseNumber}</span>
+                                <span className="badge badge-amber">{report.status}</span>
+                                <span className="text-xs text-muted">{report.createdAt}</span>
+                              </div>
+                              <h4 className="mt-1.5 font-bold text-sm">{report.issueType}</h4>
+                              <p className="text-xs text-muted mt-0.5"><strong>Location:</strong> {report.location} ({report.province})</p>
+                              <p className="text-xs text-muted mt-0.5">{report.description}</p>
+                              {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone} ({report.contactPreference})</p>}
+                            </div>
+                            <div className="flex gap-2">
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'Crew assigned')} className="button button-primary text-xs">Assign Crew</button>
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'In progress')} className="button button-secondary text-xs">Mark In Progress</button>
+                              <button onClick={() => onUpdateReportStatus?.(report.caseNumber, 'Resolved')} className="button button-secondary text-xs">Resolve</button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
               <div className="card overflow-hidden">
                 <div className="flex items-center justify-between border-b border-line p-5">
                   <h2 className="text-base font-extrabold">Major Grid & Feeder Incidents</h2>
@@ -709,8 +776,13 @@ export function AdminPortal({
           )}
 
           {/* Field Crew View */}
+            </div>
+          )}
+
           {role === 'field' && (
             <div className="space-y-6">
+              {activeSection === 'field-assignments' && (
+                <>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-extrabold tracking-tight">Field Crew Work Orders</h1>
@@ -752,41 +824,48 @@ export function AdminPortal({
                       </div>
                     </div>
 
-                    {selectedJob === job.id && (
-                      <div className="mt-4 pt-4 border-t border-line bg-surface-raised/60 -mx-5 -mb-5 p-5 rounded-b-xl space-y-3">
-                        <p className="text-xs font-bold text-ink">Field Actions & Logs</p>
-                        <div className="flex flex-wrap gap-2">
-                          <button className="button button-secondary text-xs">
-                            <Icon name="document" className="size-3.5" /> Add Log Note
-                          </button>
-                          <button className="button button-secondary text-xs">
-                            <Icon name="plus" className="size-3.5" /> Take Site Photo
-                          </button>
-                          <button
-                            onClick={() => {
-                              alert(`Work order ${job.id} marked as Restored/Completed!`)
-                              setFieldJobs(fieldJobs.map(j => j.id === job.id ? { ...j, status: 'Completed' } : j))
-                            }}
-                            className="button button-primary text-xs bg-success hover:bg-success-dark"
-                          >
-                            <Icon name="check" className="size-3.5" /> Mark Restored
-                          </button>
-                        </div>
-                        <p className="text-[0.7rem] text-muted flex items-center gap-1.5">
-                          <Icon name="shield" className="size-3.5 text-warning" />
-                          Ensure site voltage test is zero before handling lines or transformers.
-                        </p>
-                      </div>
-                    )}
+                </>
+              )}
+
+              {activeSection === 'field-safety' && (
+                <div className="space-y-6">
+                  <div>
+                    <h1 className="text-2xl font-extrabold tracking-tight">Safety Guidelines</h1>
+                    <p className="text-xs text-muted mt-1">Electrical safety procedures for field crews</p>
                   </div>
-                ))}
-              </div>
+                  <div className="card p-6 space-y-4">
+                    <div className="flex items-start gap-3">
+                      <span className="grid size-10 place-items-center rounded-lg bg-warning-soft text-warning"><Icon name="alert" className="size-5" /></span>
+                      <div>
+                        <h3 className="font-bold">Always treat lines as live</h3>
+                        <p className="text-sm text-muted">Maintain minimum 10m clearance from fallen power lines</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="grid size-10 place-items-center rounded-lg bg-brand-soft text-brand"><Icon name="shield" className="size-5" /></span>
+                      <div>
+                        <h3 className="font-bold">PPE Required</h3>
+                        <p className="text-sm text-muted">Hard hat, insulated gloves, safety boots, and high-vis vest at all times</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="grid size-10 place-items-center rounded-lg bg-blue-soft text-blue"><Icon name="phone" className="size-5" /></span>
+                      <div>
+                        <h3 className="font-bold">Emergency Contact</h3>
+                        <p className="text-sm text-muted">Call 7090 8000 immediately in case of electrical emergencies</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
           {/* Admin System & Analytics View */}
           {role === 'admin' && (
             <div className="space-y-6">
+              {activeSection === 'admin-system' && (
+                <>
               <div className="flex items-center justify-between">
                 <div>
                   <h1 className="text-2xl font-extrabold tracking-tight">System & Infrastructure Admin</h1>
@@ -920,9 +999,53 @@ export function AdminPortal({
                 <button onClick={() => setShowAddStaff(false)} className="button button-secondary flex-1">Cancel</button>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+              </div>
+                </>
+              )}
+
+              {activeSection === 'admin-users' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h1 className="text-2xl font-extrabold tracking-tight">User Management</h1>
+                      <p className="text-xs text-muted mt-1">Manage staff accounts and permissions</p>
+                    </div>
+                    <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
+                      <Icon name="plus" className="size-3.5" /> Add Staff
+                    </button>
+                  </div>
+                  <div className="card p-6">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b border-line text-xs text-muted">
+                            <th className="text-left font-semibold py-2">ID</th>
+                            <th className="text-left font-semibold py-2">Name</th>
+                            <th className="text-left font-semibold py-2">Email</th>
+                            <th className="text-left font-semibold py-2">Role</th>
+                            <th className="text-left font-semibold py-2">Department</th>
+                            <th className="text-left font-semibold py-2">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {staffUsers.map((staff) => (
+                            <tr key={staff.id} className="border-b border-line last:border-0">
+                              <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
+                              <td className="py-2.5 font-semibold">{staff.name}</td>
+                              <td className="py-2.5 text-muted">{staff.email}</td>
+                              <td className="py-2.5"><span className="badge">{staff.role}</span></td>
+                              <td className="py-2.5 text-muted">{staff.department}</td>
+                              <td className="py-2.5"><span className="badge badge-green">{staff.status}</span></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
     </div>
   )
 }
