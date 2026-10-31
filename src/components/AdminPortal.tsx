@@ -128,6 +128,9 @@ export function AdminPortal({
   // Track restored work orders for toggle
   const [restoredJobs, setRestoredJobs] = useState<Set<string>>(new Set())
 
+  // Track reviewed reports for toggle
+  const [reviewedReports, setReviewedReports] = useState<Set<string>>(new Set())
+
   // Call Centre state
   const [ccCallerName, setCcCallerName] = useState('')
   const [ccCallerPhone, setCcCallerPhone] = useState('')
@@ -651,10 +654,24 @@ export function AdminPortal({
                           Dispatch Crew
                         </button>
                         <button
-                          onClick={() => showToast(`Case ${report.caseNumber} marked as under review`, 'info')}
-                          className="button button-secondary text-xs"
+                          onClick={() => {
+                            setReviewedReports((prev) => {
+                              const next = new Set(prev)
+                              if (next.has(report.caseNumber)) {
+                                next.delete(report.caseNumber)
+                                onUpdateReportStatus?.(report.caseNumber, 'Under review')
+                                showToast(`Review cancelled for ${report.caseNumber}`, 'info')
+                              } else {
+                                next.add(report.caseNumber)
+                                onUpdateReportStatus?.(report.caseNumber, 'Under review')
+                                showToast(`Case ${report.caseNumber} marked as under review`, 'success')
+                              }
+                              return next
+                            })
+                          }}
+                          className={`button text-xs ${reviewedReports.has(report.caseNumber) ? 'bg-brand/20 text-brand border border-brand/40 hover:bg-brand/30' : 'button-secondary'}`}
                         >
-                          Review
+                          {reviewedReports.has(report.caseNumber) ? 'Cancel Review' : 'Review'}
                         </button>
                       </div>
                     </div>
