@@ -22,6 +22,52 @@ export function AdminPortal({
   const [password, setPassword] = useState('••••••••••••')
   const [authError, setAuthError] = useState('')
 
+  // Staff management
+  const [staffUsers, setStaffUsers] = useState<StaffUser[]>([
+    {
+      id: 'STF-001',
+      name: 'John Kila',
+      email: 'ops.lead@pngpower.com.pg',
+      role: 'operations',
+      department: 'Operations & Dispatch',
+      status: 'Active',
+    },
+    {
+      id: 'STF-002',
+      name: 'Maria Wari',
+      email: 'crew.delta@pngpower.com.pg',
+      role: 'field',
+      department: 'Field Operations',
+      status: 'Active',
+    },
+    {
+      id: 'STF-003',
+      name: 'David Raka',
+      email: 'admin.hq@pngpower.com.pg',
+      role: 'admin',
+      department: 'IT & Admin',
+      status: 'Active',
+    },
+    {
+      id: 'STF-004',
+      name: 'Sarah Momo',
+      email: 'dispatch.ncd@pngpower.com.pg',
+      role: 'operations',
+      department: 'NCD Dispatch',
+      status: 'Active',
+    },
+    {
+      id: 'STF-005',
+      name: 'Peter Kila',
+      email: 'tech.lae@pngpower.com.pg',
+      role: 'field',
+      department: 'Lae Field Team',
+      status: 'Active',
+    },
+  ])
+  const [showAddStaff, setShowAddStaff] = useState(false)
+  const [newStaff, setNewStaff] = useState<Partial<StaffUser>>({ role: 'staff', status: 'Active', department: 'Operations' })
+
   // State for incidents and work orders
   const [incidentsList, setIncidentsList] = useState<Incident[]>([
     {
@@ -98,6 +144,14 @@ export function AdminPortal({
       setAuthError('Please enter your staff ID or email')
       return
     }
+    const foundUser = staffUsers.find(u => u.email === username)
+    if (foundUser) {
+      setRole(foundUser.role)
+      if (foundUser.role === 'operations') setActiveSection('operations-overview')
+      else if (foundUser.role === 'field') setActiveSection('field-assignments')
+      else if (foundUser.role === 'admin') setActiveSection('admin-system')
+      else setActiveSection('operations-overview')
+    }
     setIsAuthenticated(true)
     setAuthError('')
   }
@@ -110,11 +164,21 @@ export function AdminPortal({
     } else if (targetRole === 'field') {
       setUsername('crew.delta@pngpower.com.pg')
       setActiveSection('field-assignments')
-    } else {
+    } else if (targetRole === 'admin') {
       setUsername('admin.hq@pngpower.com.pg')
       setActiveSection('admin-system')
+    } else {
+      setUsername('dispatch.ncd@pngpower.com.pg')
+      setActiveSection('operations-overview')
     }
     setIsAuthenticated(true)
+  }
+
+  function handleAddStaff() {
+    const id = `STF-${String(staffUsers.length + 1).padStart(3, '0')}`
+    setStaffUsers([...staffUsers, { ...(newStaff as StaffUser), id }])
+    setShowAddStaff(false)
+    setNewStaff({ role: 'staff', status: 'Active', department: 'Operations' })
   }
 
   // If not logged in, render the clean Staff Login Gate
@@ -158,7 +222,7 @@ export function AdminPortal({
               <p className="text-[0.68rem] font-bold uppercase tracking-wider text-white/50 mb-2">
                 1-Click Quick Demo Sign In
               </p>
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-4 gap-2">
                 <button
                   type="button"
                   onClick={() => handleQuickLogin('operations')}
@@ -182,6 +246,14 @@ export function AdminPortal({
                 >
                   <Icon name="shield" className="size-4 mx-auto text-blue" />
                   <span className="block mt-1 text-[0.72rem] font-bold">Admin HQ</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleQuickLogin('staff' as AdminRole)}
+                  className="rounded-lg border border-white/10 bg-white/5 hover:bg-white/15 p-2 text-center transition"
+                >
+                  <Icon name="users" className="size-4 mx-auto text-white/70" />
+                  <span className="block mt-1 text-[0.62rem] font-bold">Staff</span>
                 </button>
               </div>
             </div>
@@ -715,11 +787,16 @@ export function AdminPortal({
           {/* Admin System & Analytics View */}
           {role === 'admin' && (
             <div className="space-y-6">
-              <div>
-                <h1 className="text-2xl font-extrabold tracking-tight">System & Infrastructure Admin</h1>
-                <p className="text-xs text-muted mt-1">
-                  National utility telemetry, server status, security audits, and access management.
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h1 className="text-2xl font-extrabold tracking-tight">System & Infrastructure Admin</h1>
+                  <p className="text-xs text-muted mt-1">
+                    National utility telemetry, server status, security audits, and access management.
+                  </p>
+                </div>
+                <button onClick={() => setShowAddStaff(true)} className="button button-primary text-xs">
+                  <Icon name="plus" className="size-3.5" /> Add Staff
+                </button>
               </div>
 
               <div className="grid gap-5 sm:grid-cols-3">
@@ -741,20 +818,40 @@ export function AdminPortal({
               </div>
 
               <div className="card p-6">
-                <h3 className="font-extrabold text-base mb-3">Audit Logs & Activity Feed</h3>
-                <div className="space-y-3 text-xs">
-                  <div className="flex justify-between py-2 border-b border-line">
-                    <span>Public report triage auto-routed to Port Moresby Dispatch</span>
-                    <span className="text-muted">4 min ago</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-line">
-                    <span>Field Crew Delta marked WO-8842 transformer inspection as In Progress</span>
-                    <span className="text-muted">34 min ago</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-line">
-                    <span>SCADA link to Rouna 2 Hydro validated</span>
-                    <span className="text-muted">1 hr ago</span>
-                  </div>
+                <h3 className="font-extrabold text-base mb-4">Staff Directory</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-line text-xs text-muted">
+                        <th className="text-left font-semibold py-2">ID</th>
+                        <th className="text-left font-semibold py-2">Name</th>
+                        <th className="text-left font-semibold py-2">Email</th>
+                        <th className="text-left font-semibold py-2">Role</th>
+                        <th className="text-left font-semibold py-2">Department</th>
+                        <th className="text-left font-semibold py-2">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {staffUsers.map((staff) => (
+                        <tr key={staff.id} className="border-b border-line last:border-0">
+                          <td className="py-2.5 font-mono text-xs text-muted">{staff.id}</td>
+                          <td className="py-2.5 font-semibold text-ink">{staff.name}</td>
+                          <td className="py-2.5 text-muted">{staff.email}</td>
+                          <td className="py-2.5">
+                            <span className={`badge ${staff.role === 'admin' ? 'badge-blue' : staff.role === 'operations' ? 'badge-amber' : staff.role === 'field' ? 'badge-green' : ''}`}>
+                              {staff.role}
+                            </span>
+                          </td>
+                          <td className="py-2.5 text-muted">{staff.department}</td>
+                          <td className="py-2.5">
+                            <span className={`badge ${staff.status === 'Active' ? 'badge-green' : 'badge-red'}`}>
+                              {staff.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -768,6 +865,63 @@ export function AdminPortal({
           aria-label="Close navigation"
           onClick={() => setMobileOpen(false)}
         />
+      )}
+
+      {showAddStaff && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-extrabold">Add New Staff</h3>
+              <button onClick={() => setShowAddStaff(false)} className="text-muted hover:text-ink">
+                <Icon name="close" className="size-4" />
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold mb-1">Full Name</label>
+                <input
+                  value={newStaff.name || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Email</label>
+                <input
+                  type="email"
+                  value={newStaff.email || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Role</label>
+                <select
+                  value={newStaff.role}
+                  onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value as AdminRole })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                >
+                  <option value="staff">Staff</option>
+                  <option value="field">Field Crew</option>
+                  <option value="operations">Operations</option>
+                  <option value="admin">Admin HQ</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold mb-1">Department</label>
+                <input
+                  value={newStaff.department || ''}
+                  onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
+                  className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <button onClick={handleAddStaff} className="button button-primary flex-1">Add Staff</button>
+                <button onClick={() => setShowAddStaff(false)} className="button button-secondary flex-1">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

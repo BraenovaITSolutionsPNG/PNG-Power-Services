@@ -1,4 +1,14 @@
-export type AdminRole = 'operations' | 'field' | 'admin'
+export type AdminRole = 'operations' | 'field' | 'admin' | 'staff'
+
+export interface StaffUser {
+  id: string
+  name: string
+  email: string
+  role: AdminRole
+  department: string
+  status: 'Active' | 'Inactive'
+  phone?: string
+}
 
 export interface PublicReport {
   caseNumber: string
