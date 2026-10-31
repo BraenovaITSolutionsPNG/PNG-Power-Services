@@ -19,3 +19,12 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
+
+# Server
+server/node_modules/
+server/.env
+# Database
+database/data/
+mysql_data/
+pgdata/
+
