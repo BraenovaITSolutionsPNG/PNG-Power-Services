@@ -130,7 +130,7 @@ export function PublicLandingPage({
   return (
     <div className="min-h-screen bg-canvas text-ink flex flex-col">
       {/* Top Banner / Emergency Alert Strip */}
-      <div className="bg-sidebar px-4 py-2 text-xs text-white/80">
+      <div className="hidden sm:block bg-sidebar px-4 py-2 text-xs text-white/80">
         <div className="page-wrap flex flex-wrap items-center justify-between gap-2">
           <div className="hidden sm:flex items-center gap-2">
             <span className="flex size-2 rounded-full bg-success animate-pulse" />
@@ -149,7 +149,7 @@ export function PublicLandingPage({
       </div>
 
       {/* Main Public Navigation Bar */}
-      <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur-md">
+      <header className="fixed top-0 left-0 right-0 z-30 border-b border-line bg-white/95 backdrop-blur-md">
         <div className="page-wrap flex h-20 items-center justify-between gap-4">
           <Brand />
 
@@ -275,8 +275,7 @@ export function PublicLandingPage({
       </header>
 
       {/* Hero Carousel Section */}
-      <section
-        className="hero-slider relative overflow-hidden bg-hero scroll-mt-20"
+      <section className="pt-20 sm:pt-28 hero-slider relative overflow-hidden bg-hero scroll-mt-20"
         aria-roledescription="carousel"
         aria-label="PNG Power public services"
       >
@@ -330,7 +329,7 @@ export function PublicLandingPage({
             </div>
 
             {/* Quick emergency call out */}
-            <div className="mt-8 flex items-center gap-3 text-xs text-white/60">
+            <div className="hidden sm:flex mt-8 items-center gap-3 text-xs text-white/60">
               <span className="rounded-md bg-warning/20 border border-warning/30 px-2 py-1 font-bold text-warning">
                 HAZARD ALERT
               </span>
