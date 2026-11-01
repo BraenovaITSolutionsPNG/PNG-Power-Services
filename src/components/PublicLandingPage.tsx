@@ -295,7 +295,7 @@ export function PublicLandingPage({
         </div>
 
         <div className="page-wrap relative flex min-h-[34rem] items-center py-14 sm:min-h-[38rem] lg:min-h-[42rem]">
-          <div key={heroSlide} className="hero-copy max-w-2xl text-center sm:text-left">
+          <div key={heroSlide} className="hero-copy max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-sm">
               <span className="size-2 rounded-full bg-brand animate-ping" />
               <span className="size-2 rounded-full bg-success absolute" />
@@ -312,7 +312,7 @@ export function PublicLandingPage({
               {heroSlides[heroSlide].copy}
             </p>
 
-            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:items-start">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={() => {
                   setShowReportForm(true)
