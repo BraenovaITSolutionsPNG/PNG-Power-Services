@@ -1184,7 +1184,8 @@ export function AdminPortal({
                       e.preventDefault()
                       setCcCallsToday((c) => c + 1)
                       const caseNumber = 'PNG-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-26'
-                      showToast(`Report ${caseNumber} created for ${ccCallerName || 'caller'}`, 'success')
+                      // System-generated reference number - display prominently
+                      showToast(`Report created! Reference number: ${caseNumber} (system generated)`, 'success')
                       setCcCallerName('')
                       setCcCallerPhone('')
                       setCcLocation('')
