@@ -338,7 +338,7 @@ export function PublicLandingPage({
           </div>
 
           {/* Carousel Slide Indicators & Controls */}
-          <div className="absolute bottom-10 left-0 right-0 flex items-center justify-between">
+          <div className="hidden sm:flex absolute bottom-10 left-0 right-0 items-center justify-between">
             <div className="flex items-center gap-2" aria-label="Choose hero slide">
               {heroSlides.map((slide, index) => (
                 <button
