@@ -275,7 +275,7 @@ export function PublicLandingPage({
       </header>
 
       {/* Hero Carousel Section */}
-      <section className="pt-20 sm:pt-28 hero-slider relative overflow-hidden bg-hero scroll-mt-20"
+      <section className="pt-16 sm:pt-24 hero-slider relative overflow-hidden bg-hero scroll-mt-20"
         aria-roledescription="carousel"
         aria-label="PNG Power public services"
       >
@@ -294,7 +294,7 @@ export function PublicLandingPage({
           <div className="absolute inset-0 bg-gradient-to-t from-sidebar/80 via-transparent to-transparent" />
         </div>
 
-        <div className="page-wrap relative flex min-h-[34rem] items-center py-14 sm:min-h-[38rem] lg:min-h-[42rem]">
+        <div className="page-wrap relative flex min-h-[34rem] items-center pt-8 pb-14 sm:min-h-[38rem] lg:min-h-[42rem]">
           <div key={heroSlide} className="hero-copy max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white/90 backdrop-blur-sm">
               <span className="size-2 rounded-full bg-brand animate-ping" />
