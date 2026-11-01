@@ -149,7 +149,7 @@ export function PublicLandingPage({
       </div>
 
       {/* Main Public Navigation Bar */}
-      <header className="fixed top-0 sm:top-8 left-0 right-0 z-30 border-b border-line bg-white/95 backdrop-blur-md">
+      <header className="relative z-30 border-b border-line bg-white/95 backdrop-blur-md">
         <div className="page-wrap flex h-20 items-center justify-between gap-4">
           <Brand />
 
@@ -275,7 +275,7 @@ export function PublicLandingPage({
       </header>
 
       {/* Hero Carousel Section */}
-      <section className="pt-16 sm:pt-24 hero-slider relative overflow-hidden bg-hero scroll-mt-20"
+      <section className="hero-slider relative overflow-hidden bg-hero scroll-mt-20"
         aria-roledescription="carousel"
         aria-label="PNG Power public services"
       >
