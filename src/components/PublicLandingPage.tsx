@@ -409,644 +409,167 @@ export function PublicLandingPage({
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Card 1: Report Issue */}
-          <div
-            onClick={() => {
-              setShowReportForm(true)
-              setSubmittedCase(null)
-              document.getElementById('report-section')?.scrollIntoView({ behavior: 'smooth' })
-            }}
-            className="action-card cursor-pointer group"
-          >
-            <span className="icon-tile bg-brand-soft text-brand group-hover:bg-brand group-hover:text-white transition">
-              <Icon name="bolt" className="size-6" />
-            </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-wider text-brand">Outage / Hazard</p>
-            <h3 className="mt-1.5 text-xl font-extrabold">Report Power Issue</h3>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              Submit blackouts, fallen lines, or transformer sparks. No account number required.
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-brand group-hover:translate-x-1 transition">
-              Start report <Icon name="arrow" className="size-3.5" />
-            </span>
-          </div>
-
-          {/* Card 2: Track Case */}
-          <a href="#case-lookup" className="action-card group">
-            <span className="icon-tile bg-blue-soft text-blue group-hover:bg-blue group-hover:text-white transition">
-              <Icon name="search" className="size-6" />
-            </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-wider text-blue">Status Check</p>
-            <h3 className="mt-1.5 text-xl font-extrabold">Track Case Status</h3>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              Enter your PNG-XXXX-XX case code to check dispatch status and restoration times.
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-blue group-hover:translate-x-1 transition">
-              Check progress <Icon name="arrow" className="size-3.5" />
-            </span>
-          </a>
-
-          {/* Card 3: Easipay */}
-          <a href="#easipay" className="action-card group">
-            <span className="icon-tile bg-success-soft text-success-dark group-hover:bg-success group-hover:text-white transition">
-              <Icon name="zap" className="size-6" />
-            </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-wider text-success-dark">Prepaid Power</p>
-            <h3 className="mt-1.5 text-xl font-extrabold">Easipay & Tariffs</h3>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              Buy prepaid tokens via mobile banking, check residential tariffs, and find vending outlets.
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-success-dark group-hover:translate-x-1 transition">
-              View instructions <Icon name="arrow" className="size-3.5" />
-            </span>
-          </a>
-
-          {/* Card 4: New Connections */}
-          <div
-            onClick={() => {
-              setSubView('new-connection')
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            className="action-card group cursor-pointer"
-          >
-            <span className="icon-tile bg-purple-50 text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition">
-              <Icon name="clipboard" className="size-6" />
-            </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-wider text-purple-600">Application</p>
-            <h3 className="mt-1.5 text-xl font-extrabold">New Connection</h3>
-            <p className="mt-2 text-xs leading-relaxed text-muted">
-              Apply for new residential meter, post-paid metering, or load upgrade for commercial sites.
-            </p>
-            <span className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-purple-600 group-hover:translate-x-1 transition">
-              Apply & download forms <Icon name="arrow" className="size-3.5" />
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Report & Case Lookup Section */}
-      <section id="report-section" className="bg-white py-14 sm:py-18 border-y border-line scroll-mt-20">
-        <div className="page-wrap">
-          <div className="grid gap-10 lg:grid-cols-12 items-start">
-            {/* Left Column: Issue Reporting Form or Confirmation */}
-            <div className="lg:col-span-7">
-              {submittedCase ? (
-                <div className="rounded-2xl border border-success/30 bg-success-soft/50 p-6 sm:p-10 text-center">
-                  <div className="mx-auto grid size-16 place-items-center rounded-full bg-success text-white shadow-md">
-                    <Icon name="check" className="size-8" />
-                  </div>
-                  <p className="mt-5 text-xs font-bold uppercase tracking-[0.18em] text-success-dark">
-                    Report Logged Successfully
-                  </p>
-                  <h3 className="mt-2 text-2xl sm:text-3xl font-extrabold tracking-tight">
-                    Thank you for notifying PNG Power
-                  </h3>
-                  <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted">
-                    Your report has been forwarded to our national operations dispatch center. A field crew will
-                    review and prioritize the dispatch.
-                  </p>
-
-                  <div className="mt-6 inline-block rounded-xl border border-line bg-white p-5 text-left shadow-sm">
-                    <p className="text-xs font-bold uppercase tracking-wider text-muted">Your Reference Number</p>
-                    <p className="mt-1 font-mono text-3xl font-bold tracking-wider text-brand-dark">
-                      {submittedCase}
-                    </p>
-                    <p className="mt-2 text-xs text-muted">
-                      Keep this reference number. You can use it in the tracker anytime to check status updates.
-                    </p>
-                  </div>
-
-                  <div className="mt-8 flex justify-center gap-3">
-                    <button
-                      onClick={() => {
-                        setSubmittedCase(null)
-                        setShowReportForm(false)
-                      }}
-                      className="button button-secondary text-sm"
-                    >
-                      Close Form
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSubmittedCase(null)
-                        setShowReportForm(true)
-                      }}
-                      className="button button-primary text-sm"
-                    >
-                      Submit Another Report
-                    </button>
-                  </div>
-                </div>
-              ) : showReportForm ? (
-                <form onSubmit={handleFormSubmit} className="card p-6 sm:p-8 border-line">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="eyebrow">Public Fault Report</p>
-                      <h3 className="mt-1 text-2xl font-extrabold tracking-tight">
-                        Tell us about the power fault
-                      </h3>
-                      <p className="mt-1 text-xs text-muted">
-                        All reports are directly routed to the provincial dispatch team.
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setShowReportForm(false)}
-                      className="text-muted hover:text-ink text-sm font-semibold"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-
-                  <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Issue Type *
-                      </label>
-                      <select
-                        className="control"
-                        required
-                        value={issueType}
-                        onChange={(e) => setIssueType(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select fault type
-                        </option>
-                        <option>Total Blackout (Neighborhood / Suburb)</option>
-                        <option>Single Household Outage</option>
-                        <option>Fallen Power Line / Wire on Ground</option>
-                        <option>Transformer Explosion / Smoke / Spark</option>
-                        <option>Damaged or Leaning Power Pole</option>
-                        <option>Streetlight Failure</option>
-                        <option>Easipay Meter Error Code</option>
-                        <option>Low Voltage / Voltage Surge</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Province *
-                      </label>
-                      <select
-                        className="control"
-                        required
-                        value={province}
-                        onChange={(e) => setProvince(e.target.value)}
-                      >
-                        <option value="" disabled>
-                          Select province
-                        </option>
-                        <option>National Capital District (Port Moresby)</option>
-                        <option>Central Province</option>
-                        <option>Morobe (Lae / Bulolo / Wau)</option>
-                        <option>Eastern Highlands (Goroka)</option>
-                        <option>Western Highlands (Mt Hagen)</option>
-                        <option>East New Britain (Kokopo / Rabaul)</option>
-                        <option>Madang</option>
-                        <option>New Ireland (Kavieng)</option>
-                        <option>West New Britain (Kimbe)</option>
-                        <option>Milne Bay (Alotau)</option>
-                        <option>Other Province</option>
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Location / Community / Landmark *
-                      </label>
-                      <input
-                        className="control"
-                        required
-                        placeholder="e.g. Gerehu Stage 3 near Market, or Cassowary Rd Section 12"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                      />
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Description of Problem *
-                      </label>
-                      <textarea
-                        className="control min-h-24 resize-y"
-                        required
-                        placeholder="Describe what happened, any sparks, visible damage, or affected area..."
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Your Mobile Phone (Optional)
-                      </label>
-                      <input
-                        className="control"
-                        type="tel"
-                        placeholder="e.g. 7123 4567"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        Updates via
-                      </label>
-                      <select
-                        className="control"
-                        value={contactPreference}
-                        onChange={(e) => setContactPreference(e.target.value)}
-                      >
-                        <option>SMS update</option>
-                        <option>Phone call</option>
-                        <option>No contact required</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between border-t border-line pt-4">
-                    <p className="text-[0.75rem] text-muted">
-                      🔒 Your contact information is only used for fault resolution.
-                    </p>
-                    <button type="submit" className="button button-primary text-sm">
-                      Submit Fault Report <Icon name="arrow" className="size-4" />
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="card p-6 sm:p-8 bg-surface-raised/40">
-                  <div className="flex items-center gap-4">
-                    <div className="grid size-12 shrink-0 place-items-center rounded-xl bg-brand text-white shadow-brand">
-                      <Icon name="bolt" className="size-6" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-extrabold">Notice a power fault in your area?</h3>
-                      <p className="text-xs text-muted mt-0.5">
-                        Quick submission helps our field crew restore your feeder line faster.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-line">
-                      <div className="grid size-6 shrink-0 place-items-center rounded-full bg-brand-soft text-brand font-bold text-xs">
-                        1
-                      </div>
-                      <p className="text-xs text-ink/80 leading-relaxed">
-                        <strong>Instant Logging:</strong> Every submission immediately generates a unique tracking
-                        code for the public.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-line">
-                      <div className="grid size-6 shrink-0 place-items-center rounded-full bg-blue-soft text-blue font-bold text-xs">
-                        2
-                      </div>
-                      <p className="text-xs text-ink/80 leading-relaxed">
-                        <strong>Operations Triage:</strong> National Control Center groups reports to locate
-                        tripped breakers or damaged transformers.
-                      </p>
-                    </div>
-                    <div className="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-line">
-                      <div className="grid size-6 shrink-0 place-items-center rounded-full bg-success-soft text-success-dark font-bold text-xs">
-                        3
-                      </div>
-                      <p className="text-xs text-ink/80 leading-relaxed">
-                        <strong>Crew Dispatch:</strong> Regional linesmen are assigned with live status updates
-                        visible to you.
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => setShowReportForm(true)}
-                    className="button button-primary w-full mt-6 text-sm"
-                  >
-                    Open Fault Reporting Form <Icon name="arrow" className="size-4" />
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Right Column: Case Tracking Search */}
-            <div id="case-lookup" className="lg:col-span-5 scroll-mt-24">
-              <div className="card p-6 sm:p-7">
-                <div className="flex items-center gap-3">
-                  <div className="grid size-10 place-items-center rounded-xl bg-blue-soft text-blue">
-                    <Icon name="search" className="size-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-extrabold">Track Your Case</h3>
-                    <p className="text-xs text-muted">Check live status of an existing report</p>
-                  </div>
-                </div>
-
-                <div className="mt-5">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-muted mb-1.5">
-                    Enter Case Reference #
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      value={lookupQuery}
-                      onChange={(e) => setLookupQuery(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleSearchCase()}
-                      className="control min-w-0 flex-1 font-mono text-sm uppercase"
-                      placeholder="e.g. PNG-6K8R-24"
-                    />
-                    <button onClick={handleSearchCase} className="button button-primary text-sm px-4">
-                      <Icon name="search" className="size-4" />
-                    </button>
-                  </div>
-                  <p className="text-[0.7rem] text-muted mt-1.5">
-                    Try demo cases: <button onClick={() => { setLookupQuery('PNG-6K8R-24'); }} className="text-brand font-mono font-bold underline">PNG-6K8R-24</button> or <button onClick={() => { setLookupQuery('PNG-4T9J-25'); }} className="text-brand font-mono font-bold underline">PNG-4T9J-25</button>
-                  </p>
-                </div>
-
-                {/* Case Search Result Box */}
-                {foundReport !== undefined && (
-                  <div className="mt-5 border-t border-line pt-4">
-                    {foundReport ? (
-                      <div className="rounded-xl border border-line bg-surface-raised/60 p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="font-mono text-xs font-bold text-brand-dark bg-brand-soft px-2 py-0.5 rounded">
-                            {foundReport.caseNumber}
-                          </span>
-                          <span className="badge badge-amber">{foundReport.status}</span>
-                        </div>
-
-                        <div>
-                          <p className="text-sm font-bold text-ink">{foundReport.issueType}</p>
-                          <p className="text-xs text-muted mt-0.5">{foundReport.location} · {foundReport.province}</p>
-                        </div>
-
-                        {/* Progress Timeline */}
-                        <div className="mt-3 pt-3 border-t border-line/60">
-                          <p className="text-[0.68rem] font-bold uppercase tracking-wider text-muted mb-2">
-                            Status Progression
-                          </p>
-                          <div className="grid grid-cols-4 gap-1 text-center">
-                            <div className="rounded bg-success/20 py-1 text-[0.65rem] font-bold text-success-dark">
-                              Reported ✓
-                            </div>
-                            <div className={`rounded py-1 text-[0.65rem] font-bold ${foundReport.status !== 'Under review' ? 'bg-success/20 text-success-dark' : 'bg-warning/20 text-warning-dark'}`}>
-                              Triaged
-                            </div>
-                            <div className={`rounded py-1 text-[0.65rem] font-bold ${foundReport.status === 'In progress' || foundReport.status === 'Resolved' ? 'bg-success/20 text-success-dark' : 'bg-gray-100 text-muted'}`}>
-                              Dispatched
-                            </div>
-                            <div className={`rounded py-1 text-[0.65rem] font-bold ${foundReport.status === 'Resolved' ? 'bg-success text-white' : 'bg-gray-100 text-muted'}`}>
-                              Restored
-                            </div>
-                          </div>
-                        </div>
-
-                        <p className="text-[0.7rem] text-muted">
-                          Last operational log: Updated {foundReport.updatedAt}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="rounded-xl border border-warning-line bg-warning-soft p-3.5 text-xs text-warning-dark">
-                        <p className="font-bold">No active record found</p>
-                        <p className="mt-0.5 text-warning-text">
-                          Please verify your case code format (PNG-XXXX-XX) or submit a new fault report.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
+        <div className="mt-10 overflow-x-auto pb-4 -mx-4 px-4">
+          <div className="flex gap-4 min-w-max">
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Port Moresby (HQ)</h4>
+              <p className="text-xs text-muted mt-1">Corner Wards Road, Hohola, NCD</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 7090 8000</p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Live Regional Grid Status Section */}
-      <section id="grid-status" className="page-wrap py-14 sm:py-18 scroll-mt-24">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <div>
-            <p className="eyebrow">National Transmission & Distribution</p>
-            <h2 className="mt-1 text-3xl font-extrabold tracking-tight">Regional Power Grids</h2>
-            <p className="mt-2 text-sm text-muted">
-              Live generation telemetry and scheduled feeder maintenance status across PNG.
-            </p>
-          </div>
-          <div className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-3 py-1.5 text-xs font-bold text-muted">
-            <span className="size-2 rounded-full bg-success animate-pulse" />
-            Telemetry: Live 10:45 AM
-          </div>
-        </div>
-
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Grid 1: Port Moresby */}
-          <div className="card p-5 border-l-4 border-l-success">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-base">Port Moresby Grid (POM)</span>
-              <span className="badge badge-blue">98% Normal</span>
-            </div>
-            <p className="mt-2 text-xs text-muted leading-relaxed">
-              Serving National Capital District & Central Province. Edevu & Rouna hydro running at nominal capacity.
-            </p>
-            <div className="mt-4 pt-3 border-t border-line space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted">Generation Capacity</span>
-                <span className="font-semibold">124 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Current Load</span>
-                <span className="font-semibold">96 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Active Feeder Alerts</span>
-                <span className="font-semibold text-warning-dark">1 isolated (Gerehu)</span>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Lae Regional Office</h4>
+              <p className="text-xs text-muted mt-1">Cassowary Road, Lae, Morobe</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 472 2011</p>
               </div>
             </div>
-          </div>
-
-          {/* Grid 2: Ramu Grid */}
-          <div className="card p-5 border-l-4 border-l-warning">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-base">Ramu Grid</span>
-              <span className="badge badge-amber">Maintenance</span>
-            </div>
-            <p className="mt-2 text-xs text-muted leading-relaxed">
-              Covering Morobe (Lae), Madang, Eastern & Western Highlands, Chimbu. Yonki dam hydro stable.
-            </p>
-            <div className="mt-4 pt-3 border-t border-line space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted">Generation Capacity</span>
-                <span className="font-semibold">88 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Current Load</span>
-                <span className="font-semibold">74 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Active Feeder Alerts</span>
-                <span className="font-semibold text-brand">2 (Lae Market line work)</span>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Mt Hagen Center</h4>
+              <p className="text-xs text-muted mt-1">Kimininga Barracks Rd, WHP</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 542 1244</p>
               </div>
             </div>
-          </div>
-
-          {/* Grid 3: Gazelle Grid */}
-          <div className="card p-5 border-l-4 border-l-success">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-base">Gazelle Grid (ENB)</span>
-              <span className="badge badge-blue">Stable</span>
-            </div>
-            <p className="mt-2 text-xs text-muted leading-relaxed">
-              Supplying Kokopo, Rabaul, Keravat, and Kerevat Valley. Warangoi Hydro scheme operating normally.
-            </p>
-            <div className="mt-4 pt-3 border-t border-line space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted">Generation Capacity</span>
-                <span className="font-semibold">22 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Current Load</span>
-                <span className="font-semibold">16 MW</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted">Active Feeder Alerts</span>
-                <span className="font-semibold text-success-dark">0 alerts</span>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Kokopo Commercial</h4>
+              <p className="text-xs text-muted mt-1">Malaguna Road, Kokopo, ENB</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 982 9111</p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Easipay & Tariffs Guide Section */}
-      <section id="easipay" className="bg-canvas border-t border-line py-14 sm:py-18 scroll-mt-24">
-        <div className="page-wrap">
-          <div className="grid gap-10 lg:grid-cols-2 items-center">
-            <div>
-              <p className="eyebrow">Prepaid Electricity Services</p>
-              <h2 className="mt-1 text-3xl font-extrabold tracking-tight">
-                How to buy Easipay Tokens
-              </h2>
-              <p className="mt-3 text-sm text-muted leading-relaxed">
-                PNG Power Easipay allows residential and business customers to purchase electricity credit 24/7
-                directly using mobile banking and official retail vending kiosks.
-              </p>
-
-              <div className="mt-6 space-y-4">
-                <div className="flex items-start gap-3 rounded-xl bg-white p-4 border border-line">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand font-bold text-sm">
-                    BSP
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-ink">BSP Mobile Banking (*131#)</h4>
-                    <p className="text-xs text-muted mt-0.5">
-                      Dial *131#, select &quot;Buy Easipay&quot;, enter your 11-digit Meter Number and purchase amount.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-xl bg-white p-4 border border-line">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-blue-soft text-blue font-bold text-sm">
-                    Kina
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-ink">Kina Bank Mobile & USSD (*625#)</h4>
-                    <p className="text-xs text-muted mt-0.5">
-                      Select Bill Pay &gt; PNG Power Easipay, confirm meter number, receive instant 20-digit token.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 rounded-xl bg-white p-4 border border-line">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-green-50 text-green-700 font-bold text-sm">
-                    Digi
-                  </span>
-                  <div>
-                    <h4 className="text-sm font-bold text-ink">Digicel Cellmoni (*888#)</h4>
-                    <p className="text-xs text-muted mt-0.5">
-                      Purchase Easipay with your mobile phone balance without needing a bank account.
-                    </p>
-                  </div>
-                </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Goroka Office</h4>
+              <p className="text-xs text-muted mt-1">Eastern Highlands Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 532 1000</p>
               </div>
             </div>
-
-            {/* Meter entering tips */}
-            <div className="card p-6 sm:p-8 bg-sidebar text-white shadow-card">
-              <span className="badge badge-amber">Customer Tip</span>
-              <h3 className="mt-3 text-2xl font-extrabold">Entering your 20-digit token</h3>
-              <p className="mt-2 text-xs text-white/70 leading-relaxed">
-                Follow these standard instructions for your keypad interface:
-              </p>
-
-              <div className="mt-6 space-y-4">
-                <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3 text-xs border border-white/10">
-                  <span className="font-mono text-brand-light font-bold text-sm">1.</span>
-                  <span>Press the blue key or power button on your Conlog or Landis+Gyr meter keypad.</span>
-                </div>
-                <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3 text-xs border border-white/10">
-                  <span className="font-mono text-brand-light font-bold text-sm">2.</span>
-                  <span>Type the 20-digit number received in your bank SMS.</span>
-                </div>
-                <div className="flex items-center gap-3 rounded-lg bg-white/5 p-3 text-xs border border-white/10">
-                  <span className="font-mono text-brand-light font-bold text-sm">3.</span>
-                  <span>Press the <strong># or ↵ (Enter)</strong> button. Your screen will display &quot;ACCEPT&quot; and your kWh total.</span>
-                </div>
-              </div>
-
-              <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between text-xs text-white/60">
-                <span>Meter displaying Error 30?</span>
-                <a href="#contact" className="font-bold text-brand-light hover:underline">
-                  Contact Tech Support →
-                </a>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Wewak Office</h4>
+              <p className="text-xs text-muted mt-1">East Sepik Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 456 2000</p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact & Regional Offices Section */}
-      <section id="contact" className="page-wrap py-14 sm:py-18 scroll-mt-24">
-        <div className="text-center max-w-xl mx-auto">
-          <p className="eyebrow">Customer Care & Offices</p>
-          <h2 className="mt-1 text-3xl font-extrabold tracking-tight">We’re here for you</h2>
-          <p className="mt-2 text-sm text-muted">
-            Visit our regional commercial centers or contact our 24-hour national support desks.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="card p-5">
-            <h4 className="font-bold text-ink">Port Moresby (HQ)</h4>
-            <p className="text-xs text-muted mt-1">Corner Wards Road, Hohola, NCD</p>
-            <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
-              <p>Mon - Fri: 8:00 AM – 4:30 PM</p>
-              <p className="text-brand">Phone: 7090 8000</p>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Wabag Office</h4>
+              <p className="text-xs text-muted mt-1">Enga Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 547 1000</p>
+              </div>
             </div>
-          </div>
-
-          <div className="card p-5">
-            <h4 className="font-bold text-ink">Lae Regional Office</h4>
-            <p className="text-xs text-muted mt-1">Cassowary Road, Lae, Morobe</p>
-            <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
-              <p>Mon - Fri: 8:00 AM – 4:30 PM</p>
-              <p className="text-brand">Phone: 472 2011</p>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Kerema Office</h4>
+              <p className="text-xs text-muted mt-1">Gulf Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 548 1000</p>
+              </div>
             </div>
-          </div>
-
-          <div className="card p-5">
-            <h4 className="font-bold text-ink">Mt Hagen Center</h4>
-            <p className="text-xs text-muted mt-1">Kimininga Barracks Rd, WHP</p>
-            <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
-              <p>Mon - Fri: 8:00 AM – 4:30 PM</p>
-              <p className="text-brand">Phone: 542 1244</p>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Tari Office</h4>
+              <p className="text-xs text-muted mt-1">Hela Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 549 1000</p>
+              </div>
             </div>
-          </div>
-
-          <div className="card p-5">
-            <h4 className="font-bold text-ink">Kokopo Commercial</h4>
-            <p className="text-xs text-muted mt-1">Malaguna Road, Kokopo, ENB</p>
-            <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
-              <p>Mon - Fri: 8:00 AM – 4:30 PM</p>
-              <p className="text-brand">Phone: 982 9111</p>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Minj Office</h4>
+              <p className="text-xs text-muted mt-1">Jiwaka Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 550 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Madang Office</h4>
+              <p className="text-xs text-muted mt-1">Madang Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 422 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Lorengau Office</h4>
+              <p className="text-xs text-muted mt-1">Manus Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 441 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Alotau Office</h4>
+              <p className="text-xs text-muted mt-1">Milne Bay Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 641 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Kundiawa Office</h4>
+              <p className="text-xs text-muted mt-1">Chimbu (Simbu) Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 535 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Popondetta Office</h4>
+              <p className="text-xs text-muted mt-1">Oro (Northern) Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 629 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Vanimo Office</h4>
+              <p className="text-xs text-muted mt-1">Sandaun (West Sepik) Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 457 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Mendi Office</h4>
+              <p className="text-xs text-muted mt-1">Southern Highlands Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 549 2000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Kimbe Office</h4>
+              <p className="text-xs text-muted mt-1">West New Britain Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 935 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Daru Office</h4>
+              <p className="text-xs text-muted mt-1">Western Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 646 1000</p>
+              </div>
+            </div>
+            <div className="card p-5 min-w-[260px] shrink-0">
+              <h4 className="font-bold text-ink">Kavieng Office</h4>
+              <p className="text-xs text-muted mt-1">New Ireland Province</p>
+              <div className="mt-4 text-xs space-y-1 font-semibold text-ink/80">
+                <p>Mon - Fri: 8:00 AM - 4:30 PM</p>
+                <p className="text-brand">Phone: 984 1000</p>
+              </div>
             </div>
           </div>
         </div>
