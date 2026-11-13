@@ -57,6 +57,11 @@ export function PublicLandingPage({
   const [description, setDescription] = useState('')
   const [phone, setPhone] = useState('')
   const [contactPreference, setContactPreference] = useState('SMS update')
+  const [polNumber, setPolNumber] = useState('')
+  const [accountHolder, setAccountHolder] = useState('')
+  const [district, setDistrict] = useState('')
+  const [isSafetyHazard, setIsSafetyHazard] = useState(false)
+  const [preferredContactTime, setPreferredContactTime] = useState('Anytime')
 
   // Case lookup state
   const [lookupQuery, setLookupQuery] = useState('')
@@ -90,6 +95,11 @@ export function PublicLandingPage({
       status: 'Under review',
       createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       updatedAt: 'Just now',
+      polNumber: polNumber || undefined,
+      accountHolder: accountHolder || undefined,
+      district: district || undefined,
+      isSafetyHazard,
+      preferredContactTime,
     }
 
     onNewReport(newReport)
@@ -100,6 +110,11 @@ export function PublicLandingPage({
     setLocation('')
     setDescription('')
     setPhone('')
+    setPolNumber('')
+    setAccountHolder('')
+    setDistrict('')
+    setIsSafetyHazard(false)
+    setPreferredContactTime('Anytime')
   }
 
   function handleSearchCase() {
@@ -599,18 +614,66 @@ export function PublicLandingPage({
                         <option value="" disabled>
                           Select province
                         </option>
-                        <option>National Capital District (Port Moresby)</option>
-                        <option>Central Province</option>
-                        <option>Morobe (Lae / Bulolo / Wau)</option>
-                        <option>Eastern Highlands (Goroka)</option>
-                        <option>Western Highlands (Mt Hagen)</option>
-                        <option>East New Britain (Kokopo / Rabaul)</option>
-                        <option>Madang</option>
-                        <option>New Ireland (Kavieng)</option>
-                        <option>West New Britain (Kimbe)</option>
-                        <option>Milne Bay (Alotau)</option>
-                        <option>Other Province</option>
+                        <option value="NCD">National Capital District (Port Moresby)</option>
+                        <option value="Central">Central Province</option>
+                        <option value="Morobe">Morobe (Lae / Bulolo / Wau)</option>
+                        <option value="Eastern Highlands">Eastern Highlands (Goroka)</option>
+                        <option value="Western Highlands">Western Highlands (Mt Hagen)</option>
+                        <option value="East New Britain">East New Britain (Kokopo / Rabaul)</option>
+                        <option value="Madang">Madang</option>
+                        <option value="New Ireland">New Ireland (Kavieng)</option>
+                        <option value="West New Britain">West New Britain (Kimbe)</option>
+                        <option value="Milne Bay">Milne Bay (Alotau)</option>
+                        <option value="Chimbu">Chimbu (Simbu)</option>
+                        <option value="East Sepik">East Sepik</option>
+                        <option value="Enga">Enga</option>
+                        <option value="Gulf">Gulf</option>
+                        <option value="Hela">Hela</option>
+                        <option value="Jiwaka">Jiwaka</option>
+                        <option value="Manus">Manus</option>
+                        <option value="Oro">Oro (Northern)</option>
+                        <option value="Sandaun">Sandaun (West Sepik)</option>
+                        <option value="Southern Highlands">Southern Highlands</option>
+                        <option value="Western">Western</option>
+                        <option value="West Sepik">West Sepik</option>
+                        <option value="Other">Other Province</option>
                       </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        POL / Meter Number (Optional)
+                      </label>
+                      <input
+                        className="control"
+                        placeholder="e.g. 1234567890"
+                        value={polNumber}
+                        onChange={(e) => setPolNumber(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        Account Holder Name (Optional)
+                      </label>
+                      <input
+                        className="control"
+                        placeholder="Name on the account"
+                        value={accountHolder}
+                        onChange={(e) => setAccountHolder(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        District / LLG (Optional)
+                      </label>
+                      <input
+                        className="control"
+                        placeholder="e.g. Gerehu, Boroko, Downtown"
+                        value={district}
+                        onChange={(e) => setDistrict(e.target.value)}
+                      />
                     </div>
 
                     <div className="sm:col-span-2">
@@ -650,6 +713,34 @@ export function PublicLandingPage({
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        <input
+                          type="checkbox"
+                          checked={isSafetyHazard}
+                          onChange={(e) => setIsSafetyHazard(e.target.checked)}
+                          className="rounded border-line"
+                        />
+                        This is a safety hazard (fallen line, exposed wire, sparking)
+                      </label>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        Preferred Contact Time
+                      </label>
+                      <select
+                        className="control"
+                        value={preferredContactTime}
+                        onChange={(e) => setPreferredContactTime(e.target.value)}
+                      >
+                        <option>Anytime</option>
+                        <option>Morning (8am - 12pm)</option>
+                        <option>Afternoon (12pm - 4pm)</option>
+                        <option>Evening (4pm - 8pm)</option>
+                      </select>
                     </div>
 
                     <div>

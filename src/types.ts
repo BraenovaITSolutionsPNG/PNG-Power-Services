@@ -21,6 +21,11 @@ export interface PublicReport {
   status: 'Under review' | 'Crew assigned' | 'In progress' | 'Resolved'
   createdAt: string
   updatedAt: string
+  polNumber?: string
+  accountHolder?: string
+  district?: string
+  isSafetyHazard?: boolean
+  preferredContactTime?: string
 }
 
 export interface Incident {
