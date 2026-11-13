@@ -184,6 +184,11 @@ const reportSchema = z.object({
   phone: z.string().max(30).optional(),
   contactPreference: z.string().max(50).optional(),
   reporterName: z.string().max(100).optional(),
+  polNumber: z.string().max(50).optional(),
+  accountHolder: z.string().max(100).optional(),
+  district: z.string().max(100).optional(),
+  isSafetyHazard: z.boolean().optional(),
+  preferredContactTime: z.string().max(50).optional(),
 })
 
 const staffSchema = z.object({
@@ -383,11 +388,11 @@ app.post('/api/reports', async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({ error: 'Invalid input', details: parsed.error.flatten() })
     }
-    const { issueType, province, location, description, phone, contactPreference, reporterName } = parsed.data
+    const { issueType, province, location, description, phone, contactPreference, reporterName, polNumber, accountHolder, district, isSafetyHazard, preferredContactTime } = parsed.data
     const caseNumber = 'PNG-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + new Date().getFullYear().toString().slice(-2)
     const [result] = await pool.query(
-      'INSERT INTO reports (case_number, issue_type, province, location, description, reporter_phone, contact_preference, reporter_name, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [caseNumber, issueType, province || null, location, description, phone || null, contactPreference || null, reporterName || null, 'Recorded']
+      'INSERT INTO reports (case_number, issue_type, province, location, description, reporter_phone, contact_preference, reporter_name, status, pol_number, account_holder, district, is_safety_hazard, preferred_contact_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [caseNumber, issueType, province || null, location, description, phone || null, contactPreference || null, reporterName || null, 'Recorded', polNumber || null, accountHolder || null, district || null, isSafetyHazard || false, preferredContactTime || null]
     )
     await logEvent('report', result.insertId, 'created', req.user?.id || null, 'Report created', { caseNumber, issueType })
     res.status(201).json({ id: result.insertId, caseNumber })
