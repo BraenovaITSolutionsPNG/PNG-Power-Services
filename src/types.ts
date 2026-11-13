@@ -26,6 +26,9 @@ export interface PublicReport {
   district?: string
   isSafetyHazard?: boolean
   preferredContactTime?: string
+  assetType?: string
+  assetNumber?: string
+  assetDescription?: string
 }
 
 export interface Incident {

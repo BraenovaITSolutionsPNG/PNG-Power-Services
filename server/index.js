@@ -189,6 +189,9 @@ const reportSchema = z.object({
   district: z.string().max(100).optional(),
   isSafetyHazard: z.boolean().optional(),
   preferredContactTime: z.string().max(50).optional(),
+  assetType: z.string().max(50).optional(),
+  assetNumber: z.string().max(50).optional(),
+  assetDescription: z.string().max(500).optional(),
 })
 
 const staffSchema = z.object({
@@ -388,11 +391,11 @@ app.post('/api/reports', async (req, res) => {
     if (!parsed.success) {
       return res.status(400).json({ error: 'Invalid input', details: parsed.error.flatten() })
     }
-    const { issueType, province, location, description, phone, contactPreference, reporterName, polNumber, accountHolder, district, isSafetyHazard, preferredContactTime } = parsed.data
+    const { issueType, province, location, description, phone, contactPreference, reporterName, polNumber, accountHolder, district, isSafetyHazard, preferredContactTime, assetType, assetNumber, assetDescription } = parsed.data
     const caseNumber = 'PNG-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + new Date().getFullYear().toString().slice(-2)
     const [result] = await pool.query(
-      'INSERT INTO reports (case_number, issue_type, province, location, description, reporter_phone, contact_preference, reporter_name, status, pol_number, account_holder, district, is_safety_hazard, preferred_contact_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [caseNumber, issueType, province || null, location, description, phone || null, contactPreference || null, reporterName || null, 'Recorded', polNumber || null, accountHolder || null, district || null, isSafetyHazard || false, preferredContactTime || null]
+      'INSERT INTO reports (case_number, issue_type, province, location, description, reporter_phone, contact_preference, reporter_name, status, pol_number, account_holder, district, is_safety_hazard, preferred_contact_time, asset_type, asset_number, asset_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [caseNumber, issueType, province || null, location, description, phone || null, contactPreference || null, reporterName || null, 'Recorded', polNumber || null, accountHolder || null, district || null, isSafetyHazard || false, preferredContactTime || null, assetType || null, assetNumber || null, assetDescription || null]
     )
     await logEvent('report', result.insertId, 'created', req.user?.id || null, 'Report created', { caseNumber, issueType })
     res.status(201).json({ id: result.insertId, caseNumber })

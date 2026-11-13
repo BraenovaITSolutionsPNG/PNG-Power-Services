@@ -62,6 +62,9 @@ export function PublicLandingPage({
   const [district, setDistrict] = useState('')
   const [isSafetyHazard, setIsSafetyHazard] = useState(false)
   const [preferredContactTime, setPreferredContactTime] = useState('Anytime')
+  const [assetType, setAssetType] = useState('')
+  const [assetNumber, setAssetNumber] = useState('')
+  const [assetDescription, setAssetDescription] = useState('')
 
   // Case lookup state
   const [lookupQuery, setLookupQuery] = useState('')
@@ -93,6 +96,9 @@ export function PublicLandingPage({
       phone: phone || undefined,
       contactPreference,
       status: 'Under review',
+      assetType: assetType || undefined,
+      assetNumber: assetNumber || undefined,
+      assetDescription: assetDescription || undefined,
       createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       updatedAt: 'Just now',
       polNumber: polNumber || undefined,
@@ -115,6 +121,9 @@ export function PublicLandingPage({
     setDistrict('')
     setIsSafetyHazard(false)
     setPreferredContactTime('Anytime')
+    setAssetType('')
+    setAssetNumber('')
+    setAssetDescription('')
   }
 
   function handleSearchCase() {
@@ -600,6 +609,53 @@ export function PublicLandingPage({
                         <option>Low Voltage / Voltage Surge</option>
                       </select>
                     </div>
+
+                    <div>
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        Affected Infrastructure (Optional)
+                      </label>
+                      <select
+                        className="control"
+                        value={assetType}
+                        onChange={(e) => setAssetType(e.target.value)}
+                      >
+                        <option value="">Select if known</option>
+                        <option>Power Pole</option>
+                        <option>Transformer</option>
+                        <option>Service Wire / Line</option>
+                        <option>Streetlight</option>
+                        <option>Switchgear / Fuse</option>
+                        <option>Meter Box</option>
+                        <option>Other Asset</option>
+                      </select>
+                    </div>
+
+                    {assetType && (
+                      <>
+                        <div>
+                          <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                            {assetType} Number / ID
+                          </label>
+                          <input
+                            className="control"
+                            placeholder={`e.g. Pole #1234, Transformer T-567`}
+                            value={assetNumber}
+                            onChange={(e) => setAssetNumber(e.target.value)}
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                            Asset Description (Condition, Damage, etc.)
+                          </label>
+                          <textarea
+                            className="control min-h-16 resize-y"
+                            placeholder="Describe the condition of the asset, visible damage, sparks, etc."
+                            value={assetDescription}
+                            onChange={(e) => setAssetDescription(e.target.value)}
+                          />
+                        </div>
+                      </>
+                    )}
 
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
