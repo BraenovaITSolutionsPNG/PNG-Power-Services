@@ -178,6 +178,8 @@ export function AdminPortal({
   const [ccIssueType, setCcIssueType] = useState('Power outage (Area blackout)')
   const [ccProvince, setCcProvince] = useState('National Capital District (NCD)')
   const [ccLocation, setCcLocation] = useState('')
+  const [ccPolNumber, setCcPolNumber] = useState('')
+  const [ccAccountHolder, setCcAccountHolder] = useState('')
   const [ccDescription, setCcDescription] = useState('')
   const [ccLookupCase, setCcLookupCase] = useState('')
   const [ccLookupResult, setCcLookupResult] = useState<any>(null)
@@ -800,8 +802,12 @@ export function AdminPortal({
                               </div>
                               <h4 className="mt-1.5 font-bold text-sm">{report.issueType}</h4>
                               <p className="text-xs text-muted mt-0.5"><strong>Location:</strong> {report.location} ({report.province})</p>
+                              {report.district && <p className="text-xs text-muted mt-0.5"><strong>District:</strong> {report.district}</p>}
                               <p className="text-xs text-muted mt-0.5">{report.description}</p>
-                              {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone} ({report.contactPreference})</p>}
+                              {report.polNumber && <p className="text-xs text-muted mt-0.5"><strong>POL/Meter:</strong> {report.polNumber}</p>}
+                              {report.accountHolder && <p className="text-xs text-muted mt-0.5"><strong>Account Holder:</strong> {report.accountHolder}</p>}
+                              {report.isSafetyHazard && <p className="text-xs text-red-600 font-semibold mt-1">SAFETY HAZARD REPORTED</p>}
+                              {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone} ({report.contactPreference}){report.preferredContactTime ? ` - ${report.preferredContactTime}` : ''}</p>}
                             </div>
                             <div className="flex gap-2">
                               <button
@@ -1190,6 +1196,8 @@ export function AdminPortal({
                       setCcCallerPhone('')
                       setCcLocation('')
                       setCcDescription('')
+                      setCcPolNumber('')
+                      setCcAccountHolder('')
                     }}
                     className="space-y-4"
                   >
@@ -1264,6 +1272,24 @@ export function AdminPortal({
                           <option>West Sepik</option>
                         </select>
                       </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-ink mb-1">POL / Meter Number (Optional)</label>
+                      <input
+                        value={ccPolNumber || ''}
+                        onChange={(e) => setCcPolNumber(e.target.value)}
+                        placeholder="e.g. 1234567890"
+                        className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-ink mb-1">Account Holder (Optional)</label>
+                      <input
+                        value={ccAccountHolder || ''}
+                        onChange={(e) => setCcAccountHolder(e.target.value)}
+                        placeholder="Name on account"
+                        className="w-full rounded-lg border border-line bg-surface-raised px-3 py-2 text-sm"
+                      />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-ink mb-1">Location</label>
