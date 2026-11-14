@@ -38,11 +38,6 @@ interface PublicLandingPageProps {
   onNewReport: (report: PublicReport) => void
 }
 
-const translations = {
-  en: { reportTitle: 'Tell us about the power fault', issueType: 'Issue Type *', selectFault: 'Select fault type', province: 'Province *', selectProvince: 'Select province', location: 'Location / Community / Landmark *', locationPlaceholder: 'e.g. Gerehu Stage 3 near Market', description: 'Description of Problem *', descriptionPlaceholder: 'Describe what happened...', phone: 'Your Mobile Phone (Optional)', phonePlaceholder: 'e.g. 7123 4567', submit: 'Submit Report', gpsButton: 'Use My Location' },
-  tp: { reportTitle: 'Tok save long faul bilong lait', issueType: 'Kain faul *', selectFault: 'Sailem kain faul', province: 'Provins *', selectProvince: 'Sailem provins', location: 'Ples / Komuniti / Mak *', locationPlaceholder: 'sampela Gerehu Stage 3 klostu maket', description: 'Tok save long faul *', descriptionPlaceholder: 'Tok save long wanem i kamap...', phone: 'Namba bilong yu (Optional)', phonePlaceholder: 'sampela 7123 4567', submit: 'Salim ripot', gpsButton: 'Yusim ples bilong mi' },
-}
-
 export function PublicLandingPage({
   reports,
   onNewReport,
@@ -62,8 +57,6 @@ export function PublicLandingPage({
   const [description, setDescription] = useState('')
   const [phone, setPhone] = useState('')
   const [contactPreference, setContactPreference] = useState('SMS update')
-  const [language, setLanguage] = useState<'en' | 'tp'>('en')
-  const t = (key: string) => (translations as any)[language]?.[key] || (translations as any).en?.[key] || key
   const [polNumber, setPolNumber] = useState('')
   const [accountHolder, setAccountHolder] = useState('')
   const [district, setDistrict] = useState('')
@@ -580,18 +573,10 @@ export function PublicLandingPage({
                 <form onSubmit={handleFormSubmit} className="card p-6 sm:p-8 border-line">
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="eyebrow">Public Fault Report</p>
-                          <h3 className="mt-1 text-2xl font-extrabold tracking-tight">
-                            {t('reportTitle')}
-                          </h3>
-                        </div>
-                        <div className="flex gap-1">
-                          <button type="button" onClick={() => setLanguage('en')} className={`px-2 py-1 text-xs rounded ${language === 'en' ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600'}`}>EN</button>
-                          <button type="button" onClick={() => setLanguage('tp')} className={`px-2 py-1 text-xs rounded ${language === 'tp' ? 'bg-brand text-white' : 'bg-gray-100 text-gray-600'}`}>TP</button>
-                        </div>
-                      </div>
+                      <p className="eyebrow">Public Fault Report</p>
+                      <h3 className="mt-1 text-2xl font-extrabold tracking-tight">
+                        Tell us about the power fault
+                      </h3>
                       <p className="mt-1 text-xs text-muted">
                         All reports are directly routed to the provincial dispatch team.
                       </p>
@@ -608,7 +593,7 @@ export function PublicLandingPage({
                   <div className="mt-6 grid gap-5 sm:grid-cols-2">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        {t('issueType')}
+                        Issue Type *
                       </label>
                       <select
                         className="control"
@@ -719,7 +704,7 @@ export function PublicLandingPage({
 
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        {t('province')}
+                        Province *
                       </label>
                       <select
                         className="control"
@@ -794,13 +779,13 @@ export function PublicLandingPage({
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        {t('location')} *
+                        Location / Community / Landmark *
                       </label>
                       <div className="flex gap-2">
                         <input
                           className="control flex-1"
                           required
-                          placeholder={t('locationPlaceholder')}
+                          placeholder="e.g. Gerehu Stage 3 near Market, or Cassowary Rd Section 12"
                           value={location}
                           onChange={(e) => setLocation(e.target.value)}
                         />
@@ -819,19 +804,19 @@ export function PublicLandingPage({
                           }}
                           className="button button-secondary text-xs whitespace-nowrap"
                         >
-                          {t('gpsButton')}
+                          Use My Location
                         </button>
                       </div>
                     </div>
 
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        {t('description')} *
+                        Description of Problem *
                       </label>
                       <textarea
                         className="control min-h-24 resize-y"
                         required
-                        placeholder={t('descriptionPlaceholder')}
+                        placeholder="Describe what happened, any sparks, visible damage, or affected area..."
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                       />
@@ -839,12 +824,12 @@ export function PublicLandingPage({
 
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
-                        {t('phone')}
+                        Your Mobile Phone (Optional)
                       </label>
                       <input
                         className="control"
                         type="tel"
-                        placeholder={t('phonePlaceholder')}
+                        placeholder="e.g. 7123 4567"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                       />
