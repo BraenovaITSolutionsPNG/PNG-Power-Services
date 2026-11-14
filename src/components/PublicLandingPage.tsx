@@ -960,7 +960,13 @@ export function PublicLandingPage({
 
                         <div>
                           <p className="text-sm font-bold text-ink">{foundReport.issueType}</p>
-                          <p className="text-xs text-muted mt-0.5">{foundReport.location} · {foundReport.province}</p>
+                          <p className="text-xs text-muted mt-0.5">{foundReport.location} - {foundReport.province}</p>
+                          {foundReport.district && <p className="text-xs text-muted mt-0.5">District: {foundReport.district}</p>}
+                          {foundReport.polNumber && <p className="text-xs text-muted mt-0.5">POL/Meter: {foundReport.polNumber}</p>}
+                          {foundReport.accountHolder && <p className="text-xs text-muted mt-0.5">Account: {foundReport.accountHolder}</p>}
+                          {foundReport.assetType && <p className="text-xs text-muted mt-0.5">Asset: {foundReport.assetType}{foundReport.assetNumber ? ' #' + foundReport.assetNumber : ''}</p>}
+                          {foundReport.isSafetyHazard && <p className="text-xs text-red-600 font-semibold mt-0.5">SAFETY HAZARD</p>}
+                          {foundReport.preferredContactTime && <p className="text-xs text-muted mt-0.5">Preferred contact: {foundReport.preferredContactTime}</p>}
                         </div>
 
                         {/* Progress Timeline */}
@@ -1420,7 +1426,7 @@ export function PublicLandingPage({
             <p>© {new Date().getFullYear()} PNG Power Limited. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <span>National Call Centre: 7090 8000</span>
-              <span>·</span>
+              <span> - </span>
               <span>Toll Free: 116</span>
             </div>
           </div>

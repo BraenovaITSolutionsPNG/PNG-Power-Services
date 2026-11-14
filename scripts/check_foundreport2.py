@@ -1,0 +1,5 @@
+﻿p = r"D:\BraeNova_Projects\PNG Power Services\src\components\PublicLandingPage.tsx"
+s = open(p, encoding='utf-8').read()
+# Find the case lookup display
+idx = s.find("foundReport &&")
+print(s[idx:idx+800])
