@@ -808,6 +808,7 @@ export function AdminPortal({
                               {report.accountHolder && <p className="text-xs text-muted mt-0.5"><strong>Account Holder:</strong> {report.accountHolder}</p>}
                               {report.assetType && <p className="text-xs text-muted mt-0.5"><strong>Asset:</strong> {report.assetType}{report.assetNumber ? ` #${report.assetNumber}` : ''}</p>}
                               {report.assetDescription && <p className="text-xs text-muted mt-0.5"><strong>Asset Condition:</strong> {report.assetDescription}</p>}
+                              {report.photoUrl && <img src={report.photoUrl} alt="Fault photo" className="mt-2 h-24 w-24 object-cover rounded-lg border border-line" />}
                               {report.isSafetyHazard && <p className="text-xs text-red-600 font-semibold mt-1">SAFETY HAZARD REPORTED</p>}
                               {report.phone && <p className="text-xs text-brand font-semibold mt-1">Contact: {report.phone} ({report.contactPreference}){report.preferredContactTime ? ` - ${report.preferredContactTime}` : ''}</p>}
                             </div>

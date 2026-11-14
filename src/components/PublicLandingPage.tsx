@@ -72,6 +72,8 @@ export function PublicLandingPage({
   const [assetType, setAssetType] = useState('')
   const [assetNumber, setAssetNumber] = useState('')
   const [assetDescription, setAssetDescription] = useState('')
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
   // Case lookup state
   const [lookupQuery, setLookupQuery] = useState('')
@@ -106,6 +108,7 @@ export function PublicLandingPage({
       assetType: assetType || undefined,
       assetNumber: assetNumber || undefined,
       assetDescription: assetDescription || undefined,
+      photoUrl: photoPreview || undefined,
       createdAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       updatedAt: 'Just now',
       polNumber: polNumber || undefined,
@@ -131,6 +134,8 @@ export function PublicLandingPage({
     setAssetType('')
     setAssetNumber('')
     setAssetDescription('')
+    setPhotoFile(null)
+    setPhotoPreview(null)
   }
 
   function handleSearchCase() {
@@ -672,6 +677,46 @@ export function PublicLandingPage({
                       </>
                     )}
 
+                    {/* Optional Photo Upload */}
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
+                        Upload Photo (Optional)
+                      </label>
+                      <div className="flex items-center gap-3">
+                        <label className="button button-secondary text-xs cursor-pointer">
+                          <Icon name="plus" className="size-3.5" /> Choose Photo
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0]
+                              if (file) {
+                                setPhotoFile(file)
+                                const reader = new FileReader()
+                                reader.onload = (ev) => setPhotoPreview(ev.target?.result as string)
+                                reader.readAsDataURL(file)
+                              }
+                            }}
+                          />
+                        </label>
+                        {photoPreview && (
+                          <div className="relative">
+                            <img src={photoPreview} alt="Preview" className="h-16 w-16 object-cover rounded-lg border border-line" />
+                            <button
+                              type="button"
+                              onClick={() => { setPhotoFile(null); setPhotoPreview(null) }}
+                              className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+                            >
+                              x
+                            </button>
+                          </div>
+                        )}
+                        {photoFile && <span className="text-xs text-muted">{photoFile.name}</span>}
+                      </div>
+                      <p className="text-[0.7rem] text-muted mt-1">Upload a photo of the fault (max 5MB). Helps crews locate the issue.</p>
+                    </div>
+
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-ink mb-1.5">
                         {t('province')}
@@ -967,6 +1012,7 @@ export function PublicLandingPage({
                           {foundReport.assetType && <p className="text-xs text-muted mt-0.5">Asset: {foundReport.assetType}{foundReport.assetNumber ? ' #' + foundReport.assetNumber : ''}</p>}
                           {foundReport.isSafetyHazard && <p className="text-xs text-red-600 font-semibold mt-0.5">SAFETY HAZARD</p>}
                           {foundReport.preferredContactTime && <p className="text-xs text-muted mt-0.5">Preferred contact: {foundReport.preferredContactTime}</p>}
+                          {foundReport.photoUrl && <img src={foundReport.photoUrl} alt="Fault photo" className="mt-2 h-20 w-20 object-cover rounded-lg border border-line" />}
                         </div>
 
                         {/* Progress Timeline */}

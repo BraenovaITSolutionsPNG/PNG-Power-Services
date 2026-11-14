@@ -29,6 +29,7 @@ export interface PublicReport {
   assetType?: string
   assetNumber?: string
   assetDescription?: string
+  photoUrl?: string
 }
 
 export interface Incident {
