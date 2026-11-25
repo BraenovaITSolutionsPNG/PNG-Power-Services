@@ -1,4 +1,4 @@
-﻿// Offline sync utility for field crews
+// Offline sync utility for field crews
 const DB_NAME = 'png_power_offline'
 const STORE_NAME = 'pending_actions'
 

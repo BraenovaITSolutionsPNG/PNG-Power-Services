@@ -1,4 +1,4 @@
-﻿-- Add to schema.sql for new features
+-- Add to schema.sql for new features
 -- Refresh tokens table
 CREATE TABLE IF NOT EXISTS refresh_tokens (
   id INT AUTO_INCREMENT PRIMARY KEY,

@@ -1,4 +1,4 @@
-﻿// Notification provider stubs
+// Notification provider stubs
 // In production, these would integrate with actual SMS/email providers
 
 export async function sendSMS(phone, message) {

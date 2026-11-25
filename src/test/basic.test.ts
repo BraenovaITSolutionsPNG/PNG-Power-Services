@@ -1,4 +1,4 @@
-﻿import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 describe('Offline Sync', () => {
   it('isOnline returns boolean', () => {
